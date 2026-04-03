@@ -1,10 +1,48 @@
 ---
+<<<<<<< i-6
 import { HOURS } from "../data/hours";
+=======
+import type { Translations } from "../i18n";
+
+interface Props {
+  t: Translations;
+}
+
+const { t } = Astro.props;
+
+// Tempelhof Feld opening hours
+// Source: https://tempelhofer-feld.berlin.de
+// Last verified: 2026-04-03
+const HOURS: Record<
+  number,
+  { open: string; close: string; lateClose?: string; splitDay?: number }
+> = {
+  0: { open: "07:30", close: "17:00" }, // January
+  1: { open: "07:00", close: "18:00" }, // February
+  2: { open: "06:00", close: "19:00" }, // March
+  3: { open: "06:00", close: "20:30" }, // April
+  4: { open: "06:00", close: "21:30", lateClose: "22:00", splitDay: 16 }, // May: 9:30pm until 15th, 10pm from 16th
+  5: { open: "06:00", close: "23:00" }, // June
+  6: { open: "06:00", close: "23:00" }, // July
+  7: { open: "06:00", close: "22:30" }, // August
+  8: { open: "06:30", close: "21:30" }, // September
+  9: { open: "07:00", close: "19:00" }, // October
+  10: { open: "07:00", close: "18:00" }, // November
+  11: { open: "07:30", close: "17:00" }, // December
+};
+>>>>>>> main
 ---
 
-<div class="interface" data-hours={JSON.stringify(HOURS)}>
-  <h1 class="title">Is Tempelhof Feld open?</h1>
-  <p class="status" role="status" aria-live="polite">Loading…</p>
+<div
+  class="interface"
+  data-hours={JSON.stringify(HOURS)}
+  data-t-open={t.open}
+  data-t-closed={t.closed}
+  data-t-opens-in={t.opensIn}
+  data-t-closes-in={t.closesIn}
+>
+  <h1 class="title">{t.title}</h1>
+  <p class="status" role="status" aria-live="polite">{t.loading}</p>
   <p class="countdown-label"></p>
   <time class="countdown" datetime=""></time>
 </div>
@@ -15,6 +53,11 @@ import { HOURS } from "../data/hours";
   const countdownLabel = el.querySelector(".countdown-label") as HTMLElement;
   const countdownEl = el.querySelector(".countdown") as HTMLTimeElement;
   const hours = JSON.parse(el.dataset.hours!);
+
+  const tOpen = el.dataset.tOpen!;
+  const tClosed = el.dataset.tClosed!;
+  const tOpensIn = el.dataset.tOpensIn!;
+  const tClosesIn = el.dataset.tClosesIn!;
 
   function getCloseTime(entry: any, day: number): string {
     if (entry.splitDay && day >= entry.splitDay && entry.lateClose) {
@@ -44,7 +87,9 @@ import { HOURS } from "../data/hours";
     const target = new Date(now);
 
     if (isOpen) {
-      const [h, m] = getCloseTime(entry, now.getDate()).split(":").map(Number);
+      const [h, m] = getCloseTime(entry, now.getDate())
+        .split(":")
+        .map(Number);
       target.setHours(h, m, 0, 0);
       return target;
     }
@@ -87,13 +132,13 @@ import { HOURS } from "../data/hours";
     const status = isOpen ? "open" : "closed";
 
     document.documentElement.setAttribute("data-status", status);
-    statusEl.textContent = isOpen ? "Open" : "Closed";
+    statusEl.textContent = isOpen ? tOpen : tClosed;
 
     const target = getTargetTime(now, isOpen);
     const remaining = target.getTime() - now.getTime();
     const { display, iso } = formatDuration(remaining);
 
-    countdownLabel.textContent = isOpen ? "Closes in" : "Opens in";
+    countdownLabel.textContent = isOpen ? tClosesIn : tOpensIn;
     countdownEl.textContent = display;
     countdownEl.setAttribute("datetime", iso);
   }

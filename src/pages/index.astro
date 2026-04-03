@@ -1,10 +1,15 @@
 ---
 import Base from "../layouts/Base.astro";
 import Interface from "../components/Interface.astro";
+import LanguageToggle from "../components/LanguageToggle.astro";
+import { getTranslations } from "../i18n";
+
+const t = getTranslations(Astro.currentLocale);
 ---
 
-<Base title="Is Tempelhof Feld open?">
-  <Interface />
+<Base title={t.title} lang="en">
+  <LanguageToggle />
+  <Interface t={t} />
   <footer class="info-link">
     <a href="/info">Info</a>
   </footer>

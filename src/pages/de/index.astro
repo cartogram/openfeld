@@ -1,0 +1,13 @@
+---
+import Base from "../../layouts/Base.astro";
+import Interface from "../../components/Interface.astro";
+import LanguageToggle from "../../components/LanguageToggle.astro";
+import { getTranslations } from "../../i18n";
+
+const t = getTranslations(Astro.currentLocale);
+---
+
+<Base title={t.title} lang="de">
+  <LanguageToggle />
+  <Interface t={t} />
+</Base>
