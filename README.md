@@ -2,7 +2,7 @@
 
 **[isthefeldopen.com](https://isthefeldopen.com)** is a single-page website that answers one question: _Is Tempelhof Feld in Berlin currently open?_
 
-It takes the visitor's current time, compares it against a hardcoded table of monthly opening and closing times, and displays open or closed status with a countdown timer.
+It takes the visitor's current time, compares it against monthly opening and closing times, and displays open or closed status with a countdown timer. It also exposes a public API for other tools and integrations to consume the hours data.
 
 ## Tech Stack
 
@@ -23,28 +23,66 @@ No React, Vue, Svelte, or any JS framework. No Tailwind or any CSS framework —
 - Accessibility and WCAG contrast standards must be maintained throughout
 - CSS custom properties (variables) should be used for theming, especially for the open/closed colour schemes
 
-## Hours Data Structure
+## API
 
-Monthly opening and closing times are stored as a JavaScript object directly in the Astro template:
+The site exposes a public JSON API. CORS is enabled for all origins.
 
-```js
-const hours = {
-  january: { open: "06:00", close: "20:00" },
-  february: { open: "06:00", close: "20:30" },
-  march: { open: "06:00", close: "21:00" },
-  april: { open: "06:00", close: "21:30" },
-  may: { open: "06:00", close: "22:00" },
-  june: { open: "06:00", close: "22:30" },
-  july: { open: "06:00", close: "22:30" },
-  august: { open: "06:00", close: "22:00" },
-  september: { open: "06:00", close: "21:30" },
-  october: { open: "06:00", close: "20:30" },
-  november: { open: "06:00", close: "20:00" },
-  december: { open: "06:00", close: "20:00" },
-};
+### `GET /api/hours`
+
+Returns the full 12-month hours table:
+
+```json
+{
+  "hours": {
+    "january": { "open": "07:30", "close": "17:00" },
+    "february": { "open": "07:00", "close": "18:00" },
+    "may": {
+      "open": "06:00",
+      "close": "21:30",
+      "late_close": "22:00",
+      "split_day": 16
+    }
+  }
+}
 ```
 
-> **Note:** A future enhancement may replace this with an internal API (see [#11](https://github.com/cartogram/openfeld/issues/11)).
+Some months include `late_close` and `split_day` fields when closing times change partway through the month.
+
+### `POST /api/status`
+
+Accepts a timestamp and returns whether the field is open or closed at that moment:
+
+**Request:**
+
+```json
+{ "timestamp": "2025-07-15T12:00:00+02:00" }
+```
+
+**Response (open):**
+
+```json
+{
+  "status": "open",
+  "closes_at": "23:00",
+  "time_remaining": "11:00:00"
+}
+```
+
+**Response (closed):**
+
+```json
+{
+  "status": "closed",
+  "opens_at": "06:00",
+  "time_remaining": "02:30:00"
+}
+```
+
+Returns `400` for missing, non-string, or unparseable timestamps.
+
+## Hours Data
+
+Monthly opening and closing times are stored in `src/data/hours.ts` and shared between the frontend UI and the API endpoints.
 
 ## Development
 

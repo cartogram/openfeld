@@ -37,3 +37,56 @@ export const MONTH_NAMES = [
   "November",
   "December",
 ];
+
+export function getCloseTime(entry: MonthEntry, day: number): string {
+  if (entry.splitDay && day >= entry.splitDay && entry.lateClose) {
+    return entry.lateClose;
+  }
+  return entry.close;
+}
+
+export function timeToMinutes(time: string): number {
+  const [h, m] = time.split(":").map(Number);
+  return h * 60 + m;
+}
+
+export function isOpen(date: Date): boolean {
+  const entry = HOURS[date.getMonth()];
+  const currentMinutes = date.getHours() * 60 + date.getMinutes();
+  const openMinutes = timeToMinutes(entry.open);
+  const closeMinutes = timeToMinutes(getCloseTime(entry, date.getDate()));
+  return currentMinutes >= openMinutes && currentMinutes < closeMinutes;
+}
+
+export function getTargetTime(
+  date: Date,
+  open: boolean,
+): { target: Date; time: string } {
+  const entry = HOURS[date.getMonth()];
+  const target = new Date(date);
+
+  if (open) {
+    const closeTime = getCloseTime(entry, date.getDate());
+    const [h, m] = closeTime.split(":").map(Number);
+    target.setHours(h, m, 0, 0);
+    return { target, time: closeTime };
+  }
+
+  const currentMinutes = date.getHours() * 60 + date.getMinutes();
+  const openMinutes = timeToMinutes(entry.open);
+
+  if (currentMinutes < openMinutes) {
+    const [h, m] = entry.open.split(":").map(Number);
+    target.setHours(h, m, 0, 0);
+    return { target, time: entry.open };
+  }
+
+  // After closing — next opening is tomorrow
+  const tomorrow = new Date(date);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
+  const tomorrowEntry = HOURS[tomorrow.getMonth()];
+  const [h, m] = tomorrowEntry.open.split(":").map(Number);
+  tomorrow.setHours(h, m, 0, 0);
+  return { target: tomorrow, time: tomorrowEntry.open };
+}
