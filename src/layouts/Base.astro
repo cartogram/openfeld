@@ -1,16 +1,6 @@
 ---
-<<<<<<< i-6
 import { ClientRouter } from "astro:transitions";
 
-interface Props {
-  title: string;
-}
-
-const { title } = Astro.props;
----
-
-<html lang="en">
-=======
 interface Props {
   title: string;
   lang: string;
@@ -20,7 +10,6 @@ const { title, lang } = Astro.props;
 ---
 
 <html lang={lang}>
->>>>>>> main
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -28,10 +17,7 @@ const { title, lang } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-<<<<<<< i-6
     <ClientRouter />
-=======
->>>>>>> main
   </head>
   <body>
     <slot />
