@@ -1,5 +1,4 @@
 ---
-import { HOURS } from "../data/hours";
 import type { Translations } from "../i18n";
 
 interface Props {
@@ -11,7 +10,6 @@ const { t } = Astro.props;
 
 <div
   class="interface"
-  data-hours={JSON.stringify(HOURS)}
   data-t-open={t.open}
   data-t-closed={t.closed}
   data-t-opens-in={t.opensIn}
@@ -24,72 +22,20 @@ const { t } = Astro.props;
 </div>
 
 <script>
+  import {
+    isOpen,
+    getTargetTime as getTarget,
+  } from "../data/hours.js";
+
   const el = document.querySelector(".interface") as HTMLElement;
   const statusEl = el.querySelector(".status") as HTMLElement;
   const countdownLabel = el.querySelector(".countdown-label") as HTMLElement;
   const countdownEl = el.querySelector(".countdown") as HTMLTimeElement;
-  const hours = JSON.parse(el.dataset.hours!);
 
   const tOpen = el.dataset.tOpen!;
   const tClosed = el.dataset.tClosed!;
   const tOpensIn = el.dataset.tOpensIn!;
   const tClosesIn = el.dataset.tClosesIn!;
-
-  function getCloseTime(entry: any, day: number): string {
-    if (entry.splitDay && day >= entry.splitDay && entry.lateClose) {
-      return entry.lateClose;
-    }
-    return entry.close;
-  }
-
-  function timeToMinutes(time: string): number {
-    const [h, m] = time.split(":").map(Number);
-    return h * 60 + m;
-  }
-
-  function getStatus(now: Date) {
-    const entry = hours[now.getMonth()];
-    if (!entry) return false;
-
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-    const openMinutes = timeToMinutes(entry.open);
-    const closeMinutes = timeToMinutes(getCloseTime(entry, now.getDate()));
-
-    return currentMinutes >= openMinutes && currentMinutes < closeMinutes;
-  }
-
-  function getTargetTime(now: Date, isOpen: boolean): Date {
-    const entry = hours[now.getMonth()];
-    const target = new Date(now);
-
-    if (isOpen) {
-      const [h, m] = getCloseTime(entry, now.getDate())
-        .split(":")
-        .map(Number);
-      target.setHours(h, m, 0, 0);
-      return target;
-    }
-
-    // Closed: figure out next opening
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-    const openMinutes = timeToMinutes(entry.open);
-
-    if (currentMinutes < openMinutes) {
-      // Before opening today
-      const [h, m] = entry.open.split(":").map(Number);
-      target.setHours(h, m, 0, 0);
-      return target;
-    }
-
-    // After closing today — next opening is tomorrow
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0);
-    const tomorrowEntry = hours[tomorrow.getMonth()];
-    const [h, m] = tomorrowEntry.open.split(":").map(Number);
-    tomorrow.setHours(h, m, 0, 0);
-    return tomorrow;
-  }
 
   function formatDuration(ms: number): { display: string; iso: string } {
     const totalSeconds = Math.max(0, Math.floor(ms / 1000));
@@ -104,17 +50,17 @@ const { t } = Astro.props;
 
   function update() {
     const now = new Date();
-    const isOpen = getStatus(now);
-    const status = isOpen ? "open" : "closed";
+    const open = isOpen(now);
+    const status = open ? "open" : "closed";
 
     document.documentElement.setAttribute("data-status", status);
-    statusEl.textContent = isOpen ? tOpen : tClosed;
+    statusEl.textContent = open ? tOpen : tClosed;
 
-    const target = getTargetTime(now, isOpen);
+    const { target } = getTarget(now, open);
     const remaining = target.getTime() - now.getTime();
     const { display, iso } = formatDuration(remaining);
 
-    countdownLabel.textContent = isOpen ? tClosesIn : tOpensIn;
+    countdownLabel.textContent = open ? tClosesIn : tOpensIn;
     countdownEl.textContent = display;
     countdownEl.setAttribute("datetime", iso);
   }
