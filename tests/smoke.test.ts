@@ -60,3 +60,41 @@ test("language toggle is visible and links to other locale", async ({
   await expect(toggle).toHaveText("English");
   await expect(toggle).toHaveAttribute("href", "/");
 });
+
+test("countdown loads after navigating away and back", async ({ page }) => {
+  await page.goto("/");
+
+  const status = page.locator(".status");
+  const countdown = page.locator(".countdown");
+
+  // Confirm initial load completes (not stuck on "Loading…")
+  await expect(status).toHaveText(/^(Open|Closed)$/);
+  await expect(countdown).toHaveText(/\d+h \d{2}m \d{2}s/);
+
+  // Navigate to a non-existent page, then go back
+  await page.goto("/non-existent");
+  await page.goBack();
+
+  // Verify countdown re-initializes after navigation
+  await expect(status).not.toHaveText("Loading…");
+  await expect(status).toHaveText(/^(Open|Closed)$/);
+  await expect(countdown).toHaveText(/\d+h \d{2}m \d{2}s/);
+});
+
+test("countdown loads after page reload", async ({ page }) => {
+  await page.goto("/");
+
+  const status = page.locator(".status");
+  const countdown = page.locator(".countdown");
+
+  // Confirm initial load
+  await expect(status).toHaveText(/^(Open|Closed)$/);
+  await expect(countdown).toHaveText(/\d+h \d{2}m \d{2}s/);
+
+  // Reload and verify it re-initializes
+  await page.reload();
+
+  await expect(status).not.toHaveText("Loading…");
+  await expect(status).toHaveText(/^(Open|Closed)$/);
+  await expect(countdown).toHaveText(/\d+h \d{2}m \d{2}s/)
+});
