@@ -1,0 +1,228 @@
+---
+import { HOURS, MONTH_NAMES } from "../data/hours";
+---
+
+<footer class="info-trigger">
+  <button popovertarget="info-panel">Info</button>
+</footer>
+
+<div id="info-panel" popover>
+  <div class="info-content">
+    <header class="info-header">
+      <h2>Tempelhof Feld</h2>
+      <button class="close-btn" popovertarget="info-panel" popovertargetaction="hide" aria-label="Close">
+        &times;
+      </button>
+    </header>
+
+    <section>
+      <h3>Opening Hours</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Open</th>
+            <th>Close</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(HOURS).map(([month, entry]) => (
+            <tr>
+              <td>{MONTH_NAMES[Number(month)]}</td>
+              <td>{entry.open}</td>
+              <td>
+                {entry.lateClose
+                  ? `${entry.close} / ${entry.lateClose}`
+                  : entry.close}
+                {entry.splitDay && (
+                  <span class="note">
+                    (from {MONTH_NAMES[Number(month)]} {entry.splitDay})
+                  </span>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h3>About</h3>
+      <p>
+        Tempelhof Feld sits on the grounds of the former Tempelhof Airport, one
+        of the world's earliest commercial airports. The airport closed in 2008
+        and the field reopened as a public urban park in 2010. Today it is one of
+        Berlin's largest and most beloved open spaces — a place for walking,
+        cycling, skating, gardening, kiting, and simply being outside.
+      </p>
+    </section>
+
+    <section>
+      <h3>Links</h3>
+      <ul class="links">
+        <li>
+          <a href="https://mattseccafien.com" target="_blank" rel="noopener noreferrer">
+            mattseccafien.com
+          </a>
+        </li>
+        <li>
+          <a href="https://www.tempelhofer-feld.berlin.de" target="_blank" rel="noopener noreferrer">
+            tempelhofer-feld.berlin.de
+          </a>
+          — official site
+        </li>
+        <li>
+          <a href="https://www.thf100.de" target="_blank" rel="noopener noreferrer">
+            100% Tempelhofer Feld
+          </a>
+          — the organisation advocating to keep Tempelhof as a public park.
+          They accept donations to support their work.
+        </li>
+      </ul>
+    </section>
+  </div>
+</div>
+
+<style>
+  .info-trigger {
+    position: fixed;
+    bottom: 2rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+
+  .info-trigger button {
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font: inherit;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    padding: 0.5rem 1rem;
+  }
+
+  .info-trigger button:hover,
+  .info-trigger button:focus-visible {
+    opacity: 1;
+  }
+
+  #info-panel {
+    background: var(--color-bg, #1a1a2e);
+    color: var(--color-text, #d0d0d8);
+    border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+    border-radius: 0.75rem;
+    padding: 0;
+    max-width: 32rem;
+    width: calc(100% - 2rem);
+    max-height: 80dvh;
+    overflow-y: auto;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  #info-panel::backdrop {
+    background: rgb(0 0 0 / 0.5);
+  }
+
+  .info-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .info-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    line-height: 1;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+  }
+
+  .close-btn:hover,
+  .close-btn:focus-visible {
+    opacity: 1;
+  }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  th,
+  td {
+    padding: 0.25rem 0.5rem;
+    text-align: left;
+  }
+
+  th {
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  }
+
+  td {
+    font-size: 0.875rem;
+  }
+
+  tr:not(:last-child) td {
+    border-bottom: 1px solid color-mix(in srgb, currentColor 8%, transparent);
+  }
+
+  .note {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    display: block;
+  }
+
+  p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
+  .links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .links a {
+    color: var(--color-accent, #e8a0a0);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .links a:hover,
+  .links a:focus-visible {
+    opacity: 0.8;
+  }
+</style>
