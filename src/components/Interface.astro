@@ -48,6 +48,33 @@ const { t } = Astro.props;
     return { display, iso };
   }
 
+  let faviconLink =
+    (document.querySelector('link[rel="icon"][type="image/svg+xml"]') as HTMLLinkElement) ||
+    (document.querySelector('link[rel="icon"]') as HTMLLinkElement);
+  let lastFaviconStatus: boolean | null = null;
+
+  function updateFavicon(open: boolean) {
+    if (lastFaviconStatus === open) return;
+    lastFaviconStatus = open;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 32;
+    canvas.height = 32;
+    const ctx = canvas.getContext("2d")!;
+    ctx.beginPath();
+    ctx.arc(16, 16, 14, 0, Math.PI * 2);
+    ctx.fillStyle = open ? "#22c55e" : "#ef4444";
+    ctx.fill();
+
+    if (!faviconLink) {
+      faviconLink = document.createElement("link");
+      faviconLink.rel = "icon";
+      document.head.appendChild(faviconLink);
+    }
+    faviconLink.type = "image/png";
+    faviconLink.href = canvas.toDataURL("image/png");
+  }
+
   function update() {
     const now = new Date();
     const open = isOpen(now);
@@ -60,9 +87,13 @@ const { t } = Astro.props;
     const remaining = target.getTime() - now.getTime();
     const { display, iso } = formatDuration(remaining);
 
-    countdownLabel.textContent = open ? tClosesIn : tOpensIn;
+    const label = open ? tClosesIn : tOpensIn;
+    countdownLabel.textContent = label;
     countdownEl.textContent = display;
     countdownEl.setAttribute("datetime", iso);
+
+    document.title = `${label} ${display} — Tempelhof Feld`;
+    updateFavicon(open);
   }
 
   update();
