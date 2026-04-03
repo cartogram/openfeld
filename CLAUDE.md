@@ -12,6 +12,8 @@ Openfeld is an Astro 6 site using the minimal starter template. It uses pnpm as 
 - `pnpm build` — Production build to `./dist/`
 - `pnpm preview` — Preview production build locally
 - `pnpm astro add <integration>` — Add an Astro integration
+- `pnpm format` — Format code with Prettier
+- `pnpm format:check` — Check formatting without writing
 - `pnpm exec playwright test` — Run Playwright smoke tests
 - `pnpm astro check` — Run Astro type checking
 
