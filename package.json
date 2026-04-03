@@ -1,33 +1,33 @@
 {
   "name": "temp",
-  "type": "module",
   "version": "0.0.1",
-  "engines": {
-    "node": ">=22.12.0"
-  },
+  "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
     "generate-types": "wrangler types",
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format": "vp fmt .",
+    "format:check": "vp fmt --check ."
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.1.7",
     "astro": "^6.1.3",
     "wrangler": "^4.80.0"
   },
-  "packageManager": "pnpm@10.30.1+sha512.3590e550d5384caa39bd5c7c739f72270234b2f6059e13018f975c313b1eb9fefcc09714048765d4d9efe961382c312e624572c0420762bdc5d5940cdf9be73a",
-  "overrides": {
-    "vite": "^7"
-  },
   "devDependencies": {
     "@astrojs/check": "^0.9.8",
     "@playwright/test": "^1.59.1",
-    "prettier": "^3.8.1",
-    "prettier-plugin-astro": "^0.14.1",
-    "typescript": "^6.0.2"
-  }
+    "@types/node": "^25.5.2",
+    "typescript": "^6.0.2",
+    "vite-plus": "catalog:"
+  },
+  "overrides": {
+    "vite": "^7"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "packageManager": "pnpm@10.30.1+sha512.3590e550d5384caa39bd5c7c739f72270234b2f6059e13018f975c313b1eb9fefcc09714048765d4d9efe961382c312e624572c0420762bdc5d5940cdf9be73a"
 }

@@ -1,9 +1,10 @@
+/// <reference types="node" />
 import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests",
   webServer: {
-    command: "pnpm dev",
+    command: "vp run dev",
     port: 4321,
     reuseExistingServer: !process.env.CI,
   },
