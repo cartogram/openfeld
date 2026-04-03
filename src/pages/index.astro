@@ -1,5 +1,5 @@
 ---
-
+import Interface from '../components/Interface.astro';
 ---
 
 <html lang="en">
@@ -9,9 +9,36 @@
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>Is Tempelhof Feld open?</title>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<Interface />
 	</body>
 </html>
+
+<style is:global>
+	:root {
+		--color-bg: #2c5f2d;
+		--color-text: #f0f7f0;
+		--color-accent: #ffffff;
+	}
+
+	:root[data-status="closed"] {
+		--color-bg: #1a1a2e;
+		--color-text: #d0d0d8;
+		--color-accent: #e8a0a0;
+	}
+
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	html {
+		background-color: var(--color-bg);
+		color: var(--color-text);
+		font-family: system-ui, -apple-system, sans-serif;
+		transition: background-color 0.5s ease, color 0.5s ease;
+	}
+</style>
