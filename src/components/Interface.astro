@@ -2,158 +2,161 @@
 // Tempelhof Feld opening hours
 // Source: https://tempelhofer-feld.berlin.de
 // Last verified: 2026-04-03
-const HOURS: Record<number, { open: string; close: string; lateClose?: string; splitDay?: number }> = {
-	0:  { open: "07:30", close: "17:00" }, // January
-	1:  { open: "07:00", close: "18:00" }, // February
-	2:  { open: "06:00", close: "19:00" }, // March
-	3:  { open: "06:00", close: "20:30" }, // April
-	4:  { open: "06:00", close: "21:30", lateClose: "22:00", splitDay: 16 }, // May: 9:30pm until 15th, 10pm from 16th
-	5:  { open: "06:00", close: "23:00" }, // June
-	6:  { open: "06:00", close: "23:00" }, // July
-	7:  { open: "06:00", close: "22:30" }, // August
-	8:  { open: "06:30", close: "21:30" }, // September
-	9:  { open: "07:00", close: "19:00" }, // October
-	10: { open: "07:00", close: "18:00" }, // November
-	11: { open: "07:30", close: "17:00" }, // December
+const HOURS: Record<
+  number,
+  { open: string; close: string; lateClose?: string; splitDay?: number }
+> = {
+  0: { open: "07:30", close: "17:00" }, // January
+  1: { open: "07:00", close: "18:00" }, // February
+  2: { open: "06:00", close: "19:00" }, // March
+  3: { open: "06:00", close: "20:30" }, // April
+  4: { open: "06:00", close: "21:30", lateClose: "22:00", splitDay: 16 }, // May: 9:30pm until 15th, 10pm from 16th
+  5: { open: "06:00", close: "23:00" }, // June
+  6: { open: "06:00", close: "23:00" }, // July
+  7: { open: "06:00", close: "22:30" }, // August
+  8: { open: "06:30", close: "21:30" }, // September
+  9: { open: "07:00", close: "19:00" }, // October
+  10: { open: "07:00", close: "18:00" }, // November
+  11: { open: "07:30", close: "17:00" }, // December
 };
 ---
 
 <div class="interface" data-hours={JSON.stringify(HOURS)}>
-	<h1 class="title">Is Tempelhof Feld open?</h1>
-	<p class="status" role="status" aria-live="polite">Loading…</p>
-	<p class="countdown-label"></p>
-	<time class="countdown" datetime=""></time>
+  <h1 class="title">Is Tempelhof Feld open?</h1>
+  <p class="status" role="status" aria-live="polite">Loading…</p>
+  <p class="countdown-label"></p>
+  <time class="countdown" datetime=""></time>
 </div>
 
 <script>
-	const el = document.querySelector('.interface') as HTMLElement;
-	const statusEl = el.querySelector('.status') as HTMLElement;
-	const countdownLabel = el.querySelector('.countdown-label') as HTMLElement;
-	const countdownEl = el.querySelector('.countdown') as HTMLTimeElement;
-	const hours = JSON.parse(el.dataset.hours!);
+  const el = document.querySelector(".interface") as HTMLElement;
+  const statusEl = el.querySelector(".status") as HTMLElement;
+  const countdownLabel = el.querySelector(".countdown-label") as HTMLElement;
+  const countdownEl = el.querySelector(".countdown") as HTMLTimeElement;
+  const hours = JSON.parse(el.dataset.hours!);
 
-	function getCloseTime(entry: any, day: number): string {
-		if (entry.splitDay && day >= entry.splitDay && entry.lateClose) {
-			return entry.lateClose;
-		}
-		return entry.close;
-	}
+  function getCloseTime(entry: any, day: number): string {
+    if (entry.splitDay && day >= entry.splitDay && entry.lateClose) {
+      return entry.lateClose;
+    }
+    return entry.close;
+  }
 
-	function timeToMinutes(time: string): number {
-		const [h, m] = time.split(':').map(Number);
-		return h * 60 + m;
-	}
+  function timeToMinutes(time: string): number {
+    const [h, m] = time.split(":").map(Number);
+    return h * 60 + m;
+  }
 
-	function getStatus(now: Date) {
-		const entry = hours[now.getMonth()];
-		if (!entry) return false;
+  function getStatus(now: Date) {
+    const entry = hours[now.getMonth()];
+    if (!entry) return false;
 
-		const currentMinutes = now.getHours() * 60 + now.getMinutes();
-		const openMinutes = timeToMinutes(entry.open);
-		const closeMinutes = timeToMinutes(getCloseTime(entry, now.getDate()));
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const openMinutes = timeToMinutes(entry.open);
+    const closeMinutes = timeToMinutes(getCloseTime(entry, now.getDate()));
 
-		return currentMinutes >= openMinutes && currentMinutes < closeMinutes;
-	}
+    return currentMinutes >= openMinutes && currentMinutes < closeMinutes;
+  }
 
-	function getTargetTime(now: Date, isOpen: boolean): Date {
-		const entry = hours[now.getMonth()];
-		const target = new Date(now);
+  function getTargetTime(now: Date, isOpen: boolean): Date {
+    const entry = hours[now.getMonth()];
+    const target = new Date(now);
 
-		if (isOpen) {
-			const [h, m] = getCloseTime(entry, now.getDate()).split(':').map(Number);
-			target.setHours(h, m, 0, 0);
-			return target;
-		}
+    if (isOpen) {
+      const [h, m] = getCloseTime(entry, now.getDate()).split(":").map(Number);
+      target.setHours(h, m, 0, 0);
+      return target;
+    }
 
-		// Closed: figure out next opening
-		const currentMinutes = now.getHours() * 60 + now.getMinutes();
-		const openMinutes = timeToMinutes(entry.open);
+    // Closed: figure out next opening
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const openMinutes = timeToMinutes(entry.open);
 
-		if (currentMinutes < openMinutes) {
-			// Before opening today
-			const [h, m] = entry.open.split(':').map(Number);
-			target.setHours(h, m, 0, 0);
-			return target;
-		}
+    if (currentMinutes < openMinutes) {
+      // Before opening today
+      const [h, m] = entry.open.split(":").map(Number);
+      target.setHours(h, m, 0, 0);
+      return target;
+    }
 
-		// After closing today — next opening is tomorrow
-		const tomorrow = new Date(now);
-		tomorrow.setDate(tomorrow.getDate() + 1);
-		tomorrow.setHours(0, 0, 0, 0);
-		const tomorrowEntry = hours[tomorrow.getMonth()];
-		const [h, m] = tomorrowEntry.open.split(':').map(Number);
-		tomorrow.setHours(h, m, 0, 0);
-		return tomorrow;
-	}
+    // After closing today — next opening is tomorrow
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    const tomorrowEntry = hours[tomorrow.getMonth()];
+    const [h, m] = tomorrowEntry.open.split(":").map(Number);
+    tomorrow.setHours(h, m, 0, 0);
+    return tomorrow;
+  }
 
-	function formatDuration(ms: number): { display: string; iso: string } {
-		const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-		const h = Math.floor(totalSeconds / 3600);
-		const m = Math.floor((totalSeconds % 3600) / 60);
-		const s = totalSeconds % 60;
+  function formatDuration(ms: number): { display: string; iso: string } {
+    const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
 
-		const display = `${h}h ${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s`;
-		const iso = `PT${h}H${m}M${s}S`;
-		return { display, iso };
-	}
+    const display = `${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`;
+    const iso = `PT${h}H${m}M${s}S`;
+    return { display, iso };
+  }
 
-	function update() {
-		const now = new Date();
-		const isOpen = getStatus(now);
-		const status = isOpen ? 'open' : 'closed';
+  function update() {
+    const now = new Date();
+    const isOpen = getStatus(now);
+    const status = isOpen ? "open" : "closed";
 
-		document.documentElement.setAttribute('data-status', status);
-		statusEl.textContent = isOpen ? 'Open' : 'Closed';
+    document.documentElement.setAttribute("data-status", status);
+    statusEl.textContent = isOpen ? "Open" : "Closed";
 
-		const target = getTargetTime(now, isOpen);
-		const remaining = target.getTime() - now.getTime();
-		const { display, iso } = formatDuration(remaining);
+    const target = getTargetTime(now, isOpen);
+    const remaining = target.getTime() - now.getTime();
+    const { display, iso } = formatDuration(remaining);
 
-		countdownLabel.textContent = isOpen ? 'Closes in' : 'Opens in';
-		countdownEl.textContent = display;
-		countdownEl.setAttribute('datetime', iso);
-	}
+    countdownLabel.textContent = isOpen ? "Closes in" : "Opens in";
+    countdownEl.textContent = display;
+    countdownEl.setAttribute("datetime", iso);
+  }
 
-	update();
-	setInterval(update, 1_000);
+  update();
+  setInterval(update, 1_000);
 </script>
 
 <style>
-	.interface {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		min-height: 100dvh;
-		padding: 2rem;
-		gap: 1rem;
-	}
+  .interface {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100dvh;
+    padding: 2rem;
+    gap: 1rem;
+  }
 
-	.title {
-		font-size: clamp(1.25rem, 4vw, 2rem);
-		font-weight: 400;
-		color: var(--color-text);
-		text-align: center;
-	}
+  .title {
+    font-size: clamp(1.25rem, 4vw, 2rem);
+    font-weight: 400;
+    color: var(--color-text);
+    text-align: center;
+  }
 
-	.status {
-		font-size: clamp(3rem, 15vw, 10rem);
-		font-weight: 700;
-		color: var(--color-accent);
-		text-align: center;
-		line-height: 1;
-	}
+  .status {
+    font-size: clamp(3rem, 15vw, 10rem);
+    font-weight: 700;
+    color: var(--color-accent);
+    text-align: center;
+    line-height: 1;
+  }
 
-	.countdown-label {
-		font-size: clamp(1rem, 3vw, 1.5rem);
-		color: var(--color-text);
-		opacity: 0.8;
-	}
+  .countdown-label {
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    color: var(--color-text);
+    opacity: 0.8;
+  }
 
-	.countdown {
-		font-size: clamp(1.5rem, 5vw, 3rem);
-		font-weight: 600;
-		color: var(--color-accent);
-		font-variant-numeric: tabular-nums;
-	}
+  .countdown {
+    font-size: clamp(1.5rem, 5vw, 3rem);
+    font-weight: 600;
+    color: var(--color-accent);
+    font-variant-numeric: tabular-nums;
+  }
 </style>

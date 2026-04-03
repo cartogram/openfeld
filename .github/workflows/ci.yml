@@ -10,20 +10,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v4
+      - uses: voidzero-dev/setup-vp@v1
         with:
-          node-version-file: package.json
-          cache: pnpm
+          cache: true
 
-      - run: pnpm install --frozen-lockfile
-
-      - name: Check Astro
-        run: pnpm astro check
+      - name: Check
+        run: vp check
 
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium
+        run: vp exec playwright install --with-deps chromium
 
       - name: Run Playwright tests
-        run: pnpm exec playwright test
+        run: vp exec playwright test

@@ -10,17 +10,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v4
+      - uses: voidzero-dev/setup-vp@v1
         with:
-          node-version-file: package.json
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
+          cache: true
 
       - name: Build
-        run: pnpm build
+        run: vp run build
 
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3

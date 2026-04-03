@@ -1,6 +1,6 @@
 # Openfeld
 
-**[isthefeldopen.com](https://isthefeldopen.com)** is a single-page website that answers one question: *Is Tempelhof Feld in Berlin currently open?*
+**[isthefeldopen.com](https://isthefeldopen.com)** is a single-page website that answers one question: _Is Tempelhof Feld in Berlin currently open?_
 
 It takes the visitor's current time, compares it against a hardcoded table of monthly opening and closing times, and displays open or closed status with a countdown timer.
 
@@ -29,18 +29,18 @@ Monthly opening and closing times are stored as a JavaScript object directly in 
 
 ```js
 const hours = {
-  january:   { open: "06:00", close: "20:00" },
-  february:  { open: "06:00", close: "20:30" },
-  march:     { open: "06:00", close: "21:00" },
-  april:     { open: "06:00", close: "21:30" },
-  may:       { open: "06:00", close: "22:00" },
-  june:      { open: "06:00", close: "22:30" },
-  july:      { open: "06:00", close: "22:30" },
-  august:    { open: "06:00", close: "22:00" },
+  january: { open: "06:00", close: "20:00" },
+  february: { open: "06:00", close: "20:30" },
+  march: { open: "06:00", close: "21:00" },
+  april: { open: "06:00", close: "21:30" },
+  may: { open: "06:00", close: "22:00" },
+  june: { open: "06:00", close: "22:30" },
+  july: { open: "06:00", close: "22:30" },
+  august: { open: "06:00", close: "22:00" },
   september: { open: "06:00", close: "21:30" },
-  october:   { open: "06:00", close: "20:30" },
-  november:  { open: "06:00", close: "20:00" },
-  december:  { open: "06:00", close: "20:00" },
+  october: { open: "06:00", close: "20:30" },
+  november: { open: "06:00", close: "20:00" },
+  december: { open: "06:00", close: "20:00" },
 };
 ```
 
