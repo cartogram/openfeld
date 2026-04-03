@@ -10,4 +10,31 @@ const t = getTranslations(Astro.currentLocale);
 <Base title={t.title} lang="en">
   <LanguageToggle />
   <Interface t={t} />
+  <footer class="info-link">
+    <a href="/info">Info</a>
+  </footer>
 </Base>
+
+<style>
+  .info-link {
+    position: fixed;
+    bottom: 2rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+
+  .info-link a {
+    color: var(--color-text);
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+  }
+
+  .info-link a:hover,
+  .info-link a:focus-visible {
+    opacity: 1;
+  }
+</style>
