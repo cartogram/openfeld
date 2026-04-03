@@ -12,6 +12,8 @@ Openfeld is an Astro 6 site using the minimal starter template. It uses pnpm as 
 - `pnpm build` — Production build to `./dist/`
 - `pnpm preview` — Preview production build locally
 - `pnpm astro add <integration>` — Add an Astro integration
+- `pnpm exec playwright test` — Run Playwright smoke tests
+- `pnpm astro check` — Run Astro type checking
 
 ## Architecture
 
@@ -21,6 +23,12 @@ Openfeld is an Astro 6 site using the minimal starter template. It uses pnpm as 
 - **Components:** Place in `src/components/`
 - **Config:** `astro.config.mjs` (currently default/empty)
 
+## Testing
+
+After making changes, run `pnpm exec playwright test` to validate the smoke tests pass. Tests cover the page title, open/closed status display, and countdown timer.
+
 ## CI
 
-GitHub Actions workflow (`.github/workflow/claude.yml`) runs Claude Code on issues and PR comments when `@claude` is mentioned.
+- `.github/workflows/ci.yml` — Runs `astro check` and Playwright tests on PRs to `main`
+- `.github/workflows/deploy.yml` — Deploys to Cloudflare Pages on push to `main`
+- `.github/workflows/claude.yml` — Runs Claude Code on issues and PR comments when `@claude` is mentioned
