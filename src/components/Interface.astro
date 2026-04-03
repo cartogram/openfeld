@@ -2,7 +2,7 @@
 // Tempelhof Feld opening hours
 // Source: https://tempelhofer-feld.berlin.de
 // Last verified: 2026-04-03
-const HOURS = {
+const HOURS: Record<number, { open: string; close: string; lateClose?: string; splitDay?: number }> = {
 	0:  { open: "07:30", close: "17:00" }, // January
 	1:  { open: "07:00", close: "18:00" }, // February
 	2:  { open: "06:00", close: "19:00" }, // March
@@ -17,3 +17,72 @@ const HOURS = {
 	11: { open: "07:30", close: "17:00" }, // December
 };
 ---
+
+<div class="interface" data-hours={JSON.stringify(HOURS)}>
+	<h1 class="title">Is Tempelhof Feld open?</h1>
+	<p class="status" role="status" aria-live="polite">Loading…</p>
+</div>
+
+<script>
+	const el = document.querySelector('.interface') as HTMLElement;
+	const statusEl = el.querySelector('.status') as HTMLElement;
+	const hours = JSON.parse(el.dataset.hours!);
+
+	function getStatus() {
+		const now = new Date();
+		const month = now.getMonth();
+		const day = now.getDate();
+		const entry = hours[month];
+		if (!entry) return false;
+
+		const [openH, openM] = entry.open.split(':').map(Number);
+		let closeTime = entry.close;
+		if (entry.splitDay && day >= entry.splitDay && entry.lateClose) {
+			closeTime = entry.lateClose;
+		}
+		const [closeH, closeM] = closeTime.split(':').map(Number);
+
+		const currentMinutes = now.getHours() * 60 + now.getMinutes();
+		const openMinutes = openH * 60 + openM;
+		const closeMinutes = closeH * 60 + closeM;
+
+		return currentMinutes >= openMinutes && currentMinutes < closeMinutes;
+	}
+
+	function update() {
+		const isOpen = getStatus();
+		const status = isOpen ? 'open' : 'closed';
+		document.documentElement.setAttribute('data-status', status);
+		statusEl.textContent = isOpen ? 'Open' : 'Closed';
+	}
+
+	update();
+	setInterval(update, 60_000);
+</script>
+
+<style>
+	.interface {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		min-height: 100dvh;
+		padding: 2rem;
+		gap: 1rem;
+	}
+
+	.title {
+		font-size: clamp(1.25rem, 4vw, 2rem);
+		font-weight: 400;
+		color: var(--color-text);
+		text-align: center;
+	}
+
+	.status {
+		font-size: clamp(3rem, 15vw, 10rem);
+		font-weight: 700;
+		color: var(--color-accent);
+		text-align: center;
+		line-height: 1;
+	}
+</style>
