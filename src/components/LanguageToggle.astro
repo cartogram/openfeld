@@ -5,7 +5,11 @@ import { getTranslations } from "../i18n";
 const locale = Astro.currentLocale ?? "en";
 const t = getTranslations(locale);
 const otherLocale = locale === "en" ? "de" : "en";
-const href = getRelativeLocaleUrl(otherLocale, "");
+
+// Get the current page path without the locale prefix
+const pathname = Astro.url.pathname;
+const pathWithoutLocale = pathname.replace(/^\/(de|en)\//, "/");
+const href = getRelativeLocaleUrl(otherLocale, pathWithoutLocale);
 ---
 
 <a class="lang-toggle" href={href} data-other-locale={otherLocale}>
@@ -24,8 +28,9 @@ const href = getRelativeLocaleUrl(otherLocale, "");
   const preferred = localStorage.getItem("preferred-locale");
   const current = document.documentElement.lang;
   if (preferred && preferred !== current) {
+    const path = window.location.pathname.replace(/^\/(de|en)\//, "/");
     const target =
-      preferred === "en" ? "/" : `/${preferred}/`;
+      preferred === "en" ? path : `/${preferred}${path}`;
     window.location.replace(target);
   }
 </script>
