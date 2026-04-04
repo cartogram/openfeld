@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test("page loads with title and status", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page).toHaveTitle("Is Tempelhof Feld open?");
+  await expect(page).toHaveTitle(/— Tempelhof Feld$/);
   await expect(
     page.getByRole("heading", { name: "Is Tempelhof Feld open?" }),
   ).toBeVisible();
@@ -35,7 +35,7 @@ test("countdown timer is visible and updating", async ({ page }) => {
 test("German page loads with translated title and status", async ({ page }) => {
   await page.goto("/de/");
 
-  await expect(page).toHaveTitle("Ist das Tempelhofer Feld geöffnet?");
+  await expect(page).toHaveTitle(/— Tempelhof Feld$/);
   await expect(
     page.getByRole("heading", {
       name: "Ist das Tempelhofer Feld geöffnet?",
