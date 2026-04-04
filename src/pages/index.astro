@@ -2,12 +2,13 @@
 import Base from "../layouts/Base.astro";
 import { getTranslations } from "../i18n";
 
-const t = getTranslations(Astro.currentLocale);
+const locale = Astro.currentLocale ?? "en";
+const t = getTranslations(locale);
 ---
 
-<Base title={t.title} lang="en">
+<Base title={t.title} lang={locale}>
   <footer class="info-link">
-    <a href="/info">Info</a>
+    <a href={locale === "en" ? "/info" : `/${locale}/info`}>Info</a>
   </footer>
 </Base>
 
