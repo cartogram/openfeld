@@ -1,15 +1,15 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Base from "../layouts/Base.astro";
-import LanguageToggle from "../components/LanguageToggle.astro";
 import { getTranslations } from "../i18n";
 
-const t = getTranslations(Astro.currentLocale);
+const locale = Astro.currentLocale ?? "en";
+const t = getTranslations(locale);
 ---
 
-<Base title={t.title} lang="en">
-  <LanguageToggle />
+<Base title={t.title} locale={locale}>
   <footer class="info-link">
-    <a href="/info">Info</a>
+    <a href={getRelativeLocaleUrl(locale, "/info")}>Info</a>
   </footer>
 </Base>
 

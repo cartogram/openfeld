@@ -1,18 +1,19 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import Interface from "../components/Interface.astro";
+import LanguageToggle from "../components/LanguageToggle.astro";
 import { getTranslations } from "../i18n";
 
 interface Props {
   title: string;
-  lang: string;
+  locale: string;
 }
 
-const { title, lang } = Astro.props;
-const t = getTranslations(lang);
+const { title, locale } = Astro.props;
+const t = getTranslations(locale);
 ---
 
-<html lang={lang}>
+<html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -21,7 +22,8 @@ const t = getTranslations(lang);
     <ClientRouter />
   </head>
   <body>
-    <Interface t={t} />
+    <LanguageToggle />
+    <Interface t={t} locale={locale} />
     <slot />
   </body>
 </html>

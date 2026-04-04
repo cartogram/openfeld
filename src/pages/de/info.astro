@@ -1,0 +1,12 @@
+---
+import Base from "../../layouts/Base.astro";
+import InfoPage from "../../components/InfoPage.astro";
+import { getTranslations } from "../../i18n";
+
+const locale = Astro.currentLocale ?? "de";
+const t = getTranslations(locale);
+---
+
+<Base title={t.infoTitle} locale={locale}>
+  <InfoPage t={t} locale={locale} />
+</Base>

@@ -65,6 +65,46 @@ test.describe("i18n", () => {
     await expect(toggle).toHaveText("English");
     await expect(toggle).toHaveAttribute("href", "/");
   });
+
+  test("clicking language toggle switches page language", async ({ page }) => {
+    await page.addInitScript(() => localStorage.removeItem("preferred-locale"));
+    await page.goto("/");
+
+    // Verify English
+    const status = page.locator(".status");
+    await expect(status).toHaveText(/^(Open|Closed)$/);
+
+    // Click toggle to switch to German
+    await page.locator(".lang-toggle").click();
+    await page.waitForURL(/\/de\//);
+    await expect(
+      page.getByRole("heading", {
+        name: "Ist das Tempelhofer Feld geöffnet?",
+      }),
+    ).toBeVisible();
+    await expect(status).toHaveText(/^(Geöffnet|Geschlossen)$/);
+
+    // Click toggle to switch back to English
+    await page.locator(".lang-toggle").click();
+    await page.waitForURL(/^http:\/\/[^/]+\/$/);
+    await expect(status).toHaveText(/^(Open|Closed)$/);
+  });
+
+  test("language toggle preserves current page", async ({ page }) => {
+    await page.goto("/info");
+
+    // Verify on English info page
+    await expect(
+      page.getByRole("heading", { name: "Tempelhof Feld", exact: true }),
+    ).toBeVisible();
+
+    // Switch to German — should stay on info page
+    await page.locator(".lang-toggle").click();
+    await expect(page).toHaveURL(/\/de\/info/);
+    await expect(
+      page.getByRole("heading", { name: "Tempelhof Feld", exact: true }),
+    ).toBeVisible();
+  });
 });
 
 test.describe("navigation", () => {
