@@ -6,6 +6,7 @@ import cloudflare from "@astrojs/cloudflare";
 // https://astro.build/config
 export default defineConfig({
   adapter: cloudflare(),
+  devToolbar: { enabled: !process.env.PLAYWRIGHT },
   i18n: {
     defaultLocale: "en",
     locales: ["en", "de"],

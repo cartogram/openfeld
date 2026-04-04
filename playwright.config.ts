@@ -5,6 +5,7 @@ export default defineConfig({
   testDir: "./tests",
   webServer: {
     command: "vp run dev",
+    env: { PLAYWRIGHT: "1" },
     port: 4321,
     reuseExistingServer: !process.env.CI,
   },
