@@ -7,12 +7,11 @@ import { getTranslations } from "../i18n";
 interface Props {
   title: string;
   locale: string;
-  description?: string;
-  url?: string;
+  description: string;
+  url: string;
   image?: string;
-  alternateLocale?: string;
-  alternateUrl?: string;
-
+  alternateLocale: string;
+  alternateUrl: string;
 }
 
 const {
@@ -26,53 +25,35 @@ const {
 } = Astro.props;
 const t = getTranslations(locale);
 const siteUrl = "https://openfeld.cartogram.ca";
-const canonicalUrl = url ? new URL(url, siteUrl).href : undefined;
-const imageUrl = image ? new URL(image, siteUrl).href : undefined;
-const alternateHref = alternateUrl
-  ? new URL(alternateUrl, siteUrl).href
-  : undefined;
+const canonicalUrl = new URL(url, siteUrl).href;
+const imageUrl = new URL(image, siteUrl).href;
+const alternateHref = new URL(alternateUrl, siteUrl).href;
 ---
 
 <html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    {description && <meta name="description" content={description} />}
+    <meta name="description" content={description} />
     <title>{title}</title>
-    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
-    {
-      alternateHref && alternateLocale && (
-        <link
-          rel="alternate"
-          hreflang={alternateLocale}
-          href={alternateHref}
-        />
-      )
-    }
-    {
-      canonicalUrl && locale && (
-        <link rel="alternate" hreflang={locale} href={canonicalUrl} />
-      )
-    }
-    {
-      canonicalUrl && locale && alternateHref && alternateLocale && (
-        <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
-      )
-    }
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang={alternateLocale} href={alternateHref} />
+    <link rel="alternate" hreflang={locale} href={canonicalUrl} />
+    <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
 
     {/* Open Graph */}
     <meta property="og:title" content={title} />
-    {description && <meta property="og:description" content={description} />}
-    {imageUrl && <meta property="og:image" content={imageUrl} />}
-    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content="website" />
-    {locale && <meta property="og:locale" content={locale} />}
+    <meta property="og:locale" content={locale} />
 
     {/* Twitter Card */}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
-    {description && <meta name="twitter:description" content={description} />}
-    {imageUrl && <meta name="twitter:image" content={imageUrl} />}
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
     <ClientRouter />
   </head>
   <body>
