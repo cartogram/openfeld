@@ -12,7 +12,7 @@ interface Props {
   image?: string;
   alternateLocale?: string;
   alternateUrl?: string;
-  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+
 }
 
 const {
@@ -23,7 +23,6 @@ const {
   image = "/favicon.svg",
   alternateLocale,
   alternateUrl,
-  jsonLd,
 } = Astro.props;
 const t = getTranslations(locale);
 const siteUrl = "https://openfeld.cartogram.ca";
@@ -74,20 +73,6 @@ const alternateHref = alternateUrl
     <meta name="twitter:title" content={title} />
     {description && <meta name="twitter:description" content={description} />}
     {imageUrl && <meta name="twitter:image" content={imageUrl} />}
-
-    {
-      jsonLd && (
-        <script
-          is:inline
-          type="application/ld+json"
-          set:html={JSON.stringify(
-            Array.isArray(jsonLd) ? jsonLd : [jsonLd],
-            null,
-            2,
-          )}
-        />
-      )
-    }
     <ClientRouter />
   </head>
   <body>

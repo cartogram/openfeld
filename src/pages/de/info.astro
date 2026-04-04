@@ -5,39 +5,6 @@ import { getTranslations } from "../../i18n";
 
 const locale = Astro.currentLocale ?? "de";
 const t = getTranslations(locale);
-
-const jsonLd = [
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "Openfeld",
-    url: "https://openfeld.cartogram.ca",
-    inLanguage: ["en", "de"],
-    description: "Ist das Tempelhofer Feld gerade ge\u00f6ffnet?",
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Wie sind die \u00d6ffnungszeiten des Tempelhofer Feldes?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Die \u00d6ffnungszeiten des Tempelhofer Feldes variieren je nach Monat. Der Park \u00f6ffnet je nach Jahreszeit zwischen 6:00 und 7:00 Uhr und schlie\u00dft zwischen 17:00 und 22:30 Uhr. Den aktuellen Live-Status finden Sie auf openfeld.cartogram.ca.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Was ist das Tempelhofer Feld?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Das Tempelhofer Feld befindet sich auf dem Gel\u00e4nde des ehemaligen Flughafens Tempelhof, einem der fr\u00fchesten Verkehrsflugh\u00e4fen der Welt. Der Flughafen wurde 2008 geschlossen und das Feld wurde 2010 als \u00f6ffentlicher Stadtpark wieder er\u00f6ffnet. Heute ist es eine der gr\u00f6\u00dften und beliebtesten Freifl\u00e4chen Berlins \u2014 ein Ort zum Spazierengehen, Radfahren, Skaten, G\u00e4rtnern, Kiten und einfach zum Drau\u00dfensein.",
-        },
-      },
-    ],
-  },
-];
 ---
 
 <Base
@@ -45,7 +12,6 @@ const jsonLd = [
   locale={locale}
   description={t.descriptionInfo}
   url="/de/info"
-  jsonLd={jsonLd}
 >
   <InfoPage t={t} locale={locale} />
 </Base>
