@@ -6,7 +6,7 @@ import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://openfeld.com",
+  site: "https://openfeld.cartogram.ca",
   adapter: cloudflare(),
   integrations: [sitemap()],
   devToolbar: { enabled: !process.env.PLAYWRIGHT },
