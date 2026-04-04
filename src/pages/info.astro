@@ -7,6 +7,6 @@ const locale = Astro.currentLocale ?? "en";
 const t = getTranslations(locale);
 ---
 
-<Base title={t.infoTitle} lang={locale}>
+<Base title={t.infoTitle} locale={locale}>
   <InfoPage t={t} locale={locale} />
 </Base>
