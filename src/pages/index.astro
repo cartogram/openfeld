@@ -7,7 +7,14 @@ const locale = Astro.currentLocale ?? "en";
 const t = getTranslations(locale);
 ---
 
-<Base title={t.title} locale={locale}>
+<Base
+  title={t.title}
+  locale={locale}
+  description={t.descriptionHome}
+  url="/"
+  alternateLocale="de"
+  alternateUrl="/de/"
+>
   <footer class="info-link">
     <a href={getRelativeLocaleUrl(locale, "/info")}>Info</a>
   </footer>
