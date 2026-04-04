@@ -1,23 +1,26 @@
 ---
 import Base from "../layouts/Base.astro";
 import { HOURS, MONTH_NAMES } from "../data/hours";
+import { getTranslations } from "../i18n";
+
+const t = getTranslations("en");
 ---
 
-<Base title="Info — Tempelhof Feld" lang="en">
+<Base title={t.infoTitle} lang="en">
   <main class="info-page" transition:animate="fade">
     <header class="info-header">
       <h1>Tempelhof Feld</h1>
-      <a href="/" class="back-link">&larr; Back</a>
+      <a href="/" class="back-link">&larr; {t.back}</a>
     </header>
 
     <section>
-      <h2>Opening Hours</h2>
+      <h2>{t.openingHours}</h2>
       <table>
         <thead>
           <tr>
-            <th>Month</th>
-            <th>Open</th>
-            <th>Close</th>
+            <th>{t.monthHeader}</th>
+            <th>{t.openHeader}</th>
+            <th>{t.closeHeader}</th>
           </tr>
         </thead>
         <tbody>
@@ -32,7 +35,7 @@ import { HOURS, MONTH_NAMES } from "../data/hours";
                     : entry.close}
                   {entry.splitDay && (
                     <span class="note">
-                      (from {MONTH_NAMES[Number(month)]} {entry.splitDay})
+                      ({t.from} {MONTH_NAMES[Number(month)]} {entry.splitDay})
                     </span>
                   )}
                 </td>
@@ -44,18 +47,12 @@ import { HOURS, MONTH_NAMES } from "../data/hours";
     </section>
 
     <section>
-      <h2>About</h2>
-      <p>
-        Tempelhof Feld sits on the grounds of the former Tempelhof Airport, one
-        of the world's earliest commercial airports. The airport closed in 2008
-        and the field reopened as a public urban park in 2010. Today it is one of
-        Berlin's largest and most beloved open spaces — a place for walking,
-        cycling, skating, gardening, kiting, and simply being outside.
-      </p>
+      <h2>{t.about}</h2>
+      <p>{t.aboutText}</p>
     </section>
 
     <section>
-      <h2>Links</h2>
+      <h2>{t.links}</h2>
       <ul class="links">
         <li>
           <a
@@ -74,7 +71,7 @@ import { HOURS, MONTH_NAMES } from "../data/hours";
           >
             tempelhofer-feld.berlin.de
           </a>
-          — official site
+          — {t.officialSite}
         </li>
         <li>
           <a
@@ -84,8 +81,7 @@ import { HOURS, MONTH_NAMES } from "../data/hours";
           >
             100% Tempelhofer Feld
           </a>
-          — the organisation advocating to keep Tempelhof as a public park. They
-          accept donations to support their work.
+          — {t.thf100Desc}
         </li>
       </ul>
     </section>
