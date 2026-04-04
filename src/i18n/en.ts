@@ -6,4 +6,5 @@ export default {
   closesIn: "Closes in",
   loading: "Loading\u2026",
   langToggle: "Deutsch",
+  info: "More information",
 } as const;
