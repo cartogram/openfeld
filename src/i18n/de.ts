@@ -6,4 +6,5 @@ export default {
   closesIn: "Schlie\u00dft in",
   loading: "Laden\u2026",
   langToggle: "English",
+  info: "Weitere Informationen",
 } as const;
