@@ -29,8 +29,47 @@ const { t } = Astro.props;
   } from "../data/hours.js";
 
   let intervalId: ReturnType<typeof setInterval> | undefined;
+  let lastFaviconStatus: boolean | null = null;
+
+  function formatDuration(ms: number): { display: string; iso: string } {
+    const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+
+    const display = `${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`;
+    const iso = `PT${h}H${m}M${s}S`;
+    return { display, iso };
+  }
+
+  function updateFavicon(open: boolean) {
+    if (lastFaviconStatus === open) return;
+    lastFaviconStatus = open;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 32;
+    canvas.height = 32;
+    const ctx = canvas.getContext("2d")!;
+    ctx.beginPath();
+    ctx.arc(16, 16, 14, 0, Math.PI * 2);
+    ctx.fillStyle = open ? "#22c55e" : "#ef4444";
+    ctx.fill();
+
+    const href = canvas.toDataURL("image/png");
+    let link = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.type = "image/png";
+    link.href = href;
+  }
 
   function init() {
+    // Re-query favicon after head swap
+    lastFaviconStatus = null;
     const el = document.querySelector(".interface") as HTMLElement | null;
     if (!el) return;
 
@@ -42,44 +81,6 @@ const { t } = Astro.props;
     const tClosed = el.dataset.tClosed!;
     const tOpensIn = el.dataset.tOpensIn!;
     const tClosesIn = el.dataset.tClosesIn!;
-
-    function formatDuration(ms: number): { display: string; iso: string } {
-      const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-      const h = Math.floor(totalSeconds / 3600);
-      const m = Math.floor((totalSeconds % 3600) / 60);
-      const s = totalSeconds % 60;
-
-      const display = `${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`;
-      const iso = `PT${h}H${m}M${s}S`;
-      return { display, iso };
-    }
-
-    let faviconLink =
-      (document.querySelector('link[rel="icon"][type="image/svg+xml"]') as HTMLLinkElement) ||
-      (document.querySelector('link[rel="icon"]') as HTMLLinkElement);
-    let lastFaviconStatus: boolean | null = null;
-
-    function updateFavicon(open: boolean) {
-      if (lastFaviconStatus === open) return;
-      lastFaviconStatus = open;
-
-      const canvas = document.createElement("canvas");
-      canvas.width = 32;
-      canvas.height = 32;
-      const ctx = canvas.getContext("2d")!;
-      ctx.beginPath();
-      ctx.arc(16, 16, 14, 0, Math.PI * 2);
-      ctx.fillStyle = open ? "#22c55e" : "#ef4444";
-      ctx.fill();
-
-      if (!faviconLink) {
-        faviconLink = document.createElement("link");
-        faviconLink.rel = "icon";
-        document.head.appendChild(faviconLink);
-      }
-      faviconLink.type = "image/png";
-      faviconLink.href = canvas.toDataURL("image/png");
-    }
 
     function update() {
       const now = new Date();
