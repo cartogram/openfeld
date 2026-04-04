@@ -22,7 +22,7 @@ export default {
   thf100Desc:
     "die Organisation, die sich f\u00fcr den Erhalt von Tempelhof als \u00f6ffentlichen Park einsetzt. Sie nehmen Spenden zur Unterst\u00fctzung ihrer Arbeit an.",
   descriptionHome:
-    "Ist das Tempelhofer Feld gerade ge\u00f6ffnet? Live-Status und Countdown f\u00fcr Berlins beliebten Park.",
+    "Prüfen Sie, ob das Tempelhofer Feld gerade geöffnet ist. Live-Status und Countdown-Timer für Berlins beliebten Park.",
   descriptionInfo:
-    "\u00d6ffnungszeiten, Geschichte und n\u00fctzliche Links f\u00fcr das Tempelhofer Feld in Berlin.",
+    "Öffnungszeiten, Geschichte und nützliche Links für das Tempelhofer Feld in Berlin.",
 } as const;
