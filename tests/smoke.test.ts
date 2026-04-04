@@ -1,100 +1,154 @@
 import { test, expect } from "@playwright/test";
 
-test("page loads with title and status", async ({ page }) => {
-  await page.goto("/");
+test.describe("home page", () => {
+  test("page loads with title and status", async ({ page }) => {
+    await page.goto("/");
 
-  await expect(page).toHaveTitle(/— Tempelhof Feld$/);
-  await expect(
-    page.getByRole("heading", { name: "Is Tempelhof Feld open?" }),
-  ).toBeVisible();
+    await expect(page).toHaveTitle(/— Tempelhof Feld$/);
+    await expect(
+      page.getByRole("heading", { name: "Is Tempelhof Feld open?" }),
+    ).toBeVisible();
+  });
+
+  test("displays open or closed status", async ({ page }) => {
+    await page.goto("/");
+
+    const status = page.locator(".status");
+    await expect(status).toHaveText(/^(Open|Closed)$/);
+  });
+
+  test("countdown timer is visible and updating", async ({ page }) => {
+    await page.goto("/");
+
+    const countdown = page.locator(".countdown");
+    await expect(countdown).toBeVisible();
+
+    const first = await countdown.textContent();
+    expect(first).toMatch(/\d+h \d{2}m \d{2}s/);
+
+    // Wait and verify the timer updates
+    await page.waitForTimeout(1500);
+    const second = await countdown.textContent();
+    expect(second).toMatch(/\d+h \d{2}m \d{2}s/);
+    expect(second).not.toBe(first);
+  });
 });
 
-test("displays open or closed status", async ({ page }) => {
-  await page.goto("/");
+test.describe("i18n", () => {
+  test("German page loads with translated title and status", async ({
+    page,
+  }) => {
+    await page.goto("/de/");
 
-  const status = page.locator(".status");
-  await expect(status).toHaveText(/^(Open|Closed)$/);
+    await expect(page).toHaveTitle(/— Tempelhof Feld$/);
+    await expect(
+      page.getByRole("heading", {
+        name: "Ist das Tempelhofer Feld geöffnet?",
+      }),
+    ).toBeVisible();
+
+    const status = page.locator(".status");
+    await expect(status).toHaveText(/^(Geöffnet|Geschlossen)$/);
+  });
+
+  test("language toggle is visible and links to other locale", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const toggle = page.locator(".lang-toggle");
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveText("Deutsch");
+    await expect(toggle).toHaveAttribute("href", "/de/");
+
+    await page.goto("/de/");
+    await expect(toggle).toHaveText("English");
+    await expect(toggle).toHaveAttribute("href", "/");
+  });
 });
 
-test("countdown timer is visible and updating", async ({ page }) => {
-  await page.goto("/");
+test.describe("navigation", () => {
+  test("countdown loads after navigating away and back", async ({ page }) => {
+    await page.goto("/");
 
-  const countdown = page.locator(".countdown");
-  await expect(countdown).toBeVisible();
+    const status = page.locator(".status");
+    const countdown = page.locator(".countdown");
 
-  const first = await countdown.textContent();
-  expect(first).toMatch(/\d+h \d{2}m \d{2}s/);
+    // Confirm initial load completes (not stuck on "Loading…")
+    await expect(status).toHaveText(/^(Open|Closed)$/);
+    await expect(countdown).toHaveText(/\d+h \d{2}m \d{2}s/);
 
-  // Wait and verify the timer updates
-  await page.waitForTimeout(1500);
-  const second = await countdown.textContent();
-  expect(second).toMatch(/\d+h \d{2}m \d{2}s/);
-  expect(second).not.toBe(first);
-});
+    // Navigate to a non-existent page, then go back
+    await page.goto("/non-existent");
+    await page.goBack();
 
-test("German page loads with translated title and status", async ({ page }) => {
-  await page.goto("/de/");
+    // Verify countdown re-initializes after navigation
+    await expect(status).not.toHaveText("Loading…");
+    await expect(status).toHaveText(/^(Open|Closed)$/);
+    await expect(countdown).toHaveText(/\d+h \d{2}m \d{2}s/);
+  });
 
-  await expect(page).toHaveTitle(/— Tempelhof Feld$/);
-  await expect(
-    page.getByRole("heading", {
-      name: "Ist das Tempelhofer Feld geöffnet?",
-    }),
-  ).toBeVisible();
+  test("countdown loads after page reload", async ({ page }) => {
+    await page.goto("/");
 
-  const status = page.locator(".status");
-  await expect(status).toHaveText(/^(Geöffnet|Geschlossen)$/);
-});
+    const status = page.locator(".status");
+    const countdown = page.locator(".countdown");
 
-test("language toggle is visible and links to other locale", async ({
-  page,
-}) => {
-  await page.goto("/");
+    // Confirm initial load
+    await expect(status).toHaveText(/^(Open|Closed)$/);
+    await expect(countdown).toHaveText(/\d+h \d{2}m \d{2}s/);
 
-  const toggle = page.locator(".lang-toggle");
-  await expect(toggle).toBeVisible();
-  await expect(toggle).toHaveText("Deutsch");
-  await expect(toggle).toHaveAttribute("href", "/de/");
+    // Reload and verify it re-initializes
+    await page.reload();
 
-  await page.goto("/de/");
-  await expect(toggle).toHaveText("English");
-  await expect(toggle).toHaveAttribute("href", "/");
-});
+    await expect(status).not.toHaveText("Loading…");
+    await expect(status).toHaveText(/^(Open|Closed)$/);
+    await expect(countdown).toHaveText(/\d+h \d{2}m \d{2}s/);
+  });
 
-test("countdown loads after navigating away and back", async ({ page }) => {
-  await page.goto("/");
+  test("countdown loads after navigating to info and back", async ({
+    page,
+  }) => {
+    await page.goto("/");
 
-  const status = page.locator(".status");
-  const countdown = page.locator(".countdown");
+    const status = page.locator(".status");
+    const countdown = page.locator(".countdown");
 
-  // Confirm initial load completes (not stuck on "Loading…")
-  await expect(status).toHaveText(/^(Open|Closed)$/);
-  await expect(countdown).toHaveText(/\d+h \d{2}m \d{2}s/);
+    // Confirm initial load
+    await expect(status).toHaveText(/^(Open|Closed)$/);
+    await expect(countdown).toHaveText(/\d+h \d{2}m \d{2}s/);
 
-  // Navigate to a non-existent page, then go back
-  await page.goto("/non-existent");
-  await page.goBack();
+    // Click the Info link
+    await page.locator(".info-link a").click();
+    await expect(page.locator(".info-page")).toBeVisible();
 
-  // Verify countdown re-initializes after navigation
-  await expect(status).not.toHaveText("Loading…");
-  await expect(status).toHaveText(/^(Open|Closed)$/);
-  await expect(countdown).toHaveText(/\d+h \d{2}m \d{2}s/);
-});
+    // Click the Back link
+    await page.locator(".back-link").click();
 
-test("countdown loads after page reload", async ({ page }) => {
-  await page.goto("/");
+    // Verify countdown re-initializes after returning
+    await expect(status).not.toHaveText("Loading…");
+    await expect(status).toHaveText(/^(Open|Closed)$/);
+    await expect(countdown).toHaveText(/\d+h \d{2}m \d{2}s/);
+  });
 
-  const status = page.locator(".status");
-  const countdown = page.locator(".countdown");
+  test("countdown loads after starting on info page and navigating home", async ({
+    page,
+  }) => {
+    await page.goto("/info");
 
-  // Confirm initial load
-  await expect(status).toHaveText(/^(Open|Closed)$/);
-  await expect(countdown).toHaveText(/\d+h \d{2}m \d{2}s/);
+    // Confirm info page loaded
+    await expect(
+      page.getByRole("heading", { name: "Tempelhof Feld", exact: true }),
+    ).toBeVisible();
 
-  // Reload and verify it re-initializes
-  await page.reload();
+    // Navigate to home via the back link
+    await page.locator(".back-link").click();
 
-  await expect(status).not.toHaveText("Loading…");
-  await expect(status).toHaveText(/^(Open|Closed)$/);
-  await expect(countdown).toHaveText(/\d+h \d{2}m \d{2}s/)
+    // Verify countdown is loaded
+    const status = page.locator(".status");
+    const countdown = page.locator(".countdown");
+    await expect(status).not.toHaveText("Loading…");
+    await expect(status).toHaveText(/^(Open|Closed)$/);
+    await expect(countdown).toHaveText(/\d+h \d{2}m \d{2}s/);
+  });
 });

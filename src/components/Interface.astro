@@ -14,6 +14,7 @@ const { t } = Astro.props;
   data-t-closed={t.closed}
   data-t-opens-in={t.opensIn}
   data-t-closes-in={t.closesIn}
+  transition:persist
 >
   <h1 class="title">{t.title}</h1>
   <p class="status" role="status" aria-live="polite">{t.loading}</p>
@@ -27,77 +28,86 @@ const { t } = Astro.props;
     getTargetTime as getTarget,
   } from "../data/hours.js";
 
-  const el = document.querySelector(".interface") as HTMLElement;
-  const statusEl = el.querySelector(".status") as HTMLElement;
-  const countdownLabel = el.querySelector(".countdown-label") as HTMLElement;
-  const countdownEl = el.querySelector(".countdown") as HTMLTimeElement;
+  let intervalId: ReturnType<typeof setInterval> | undefined;
 
-  const tOpen = el.dataset.tOpen!;
-  const tClosed = el.dataset.tClosed!;
-  const tOpensIn = el.dataset.tOpensIn!;
-  const tClosesIn = el.dataset.tClosesIn!;
+  function init() {
+    const el = document.querySelector(".interface") as HTMLElement | null;
+    if (!el) return;
 
-  function formatDuration(ms: number): { display: string; iso: string } {
-    const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-    const h = Math.floor(totalSeconds / 3600);
-    const m = Math.floor((totalSeconds % 3600) / 60);
-    const s = totalSeconds % 60;
+    const statusEl = el.querySelector(".status") as HTMLElement;
+    const countdownLabel = el.querySelector(".countdown-label") as HTMLElement;
+    const countdownEl = el.querySelector(".countdown") as HTMLTimeElement;
 
-    const display = `${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`;
-    const iso = `PT${h}H${m}M${s}S`;
-    return { display, iso };
-  }
+    const tOpen = el.dataset.tOpen!;
+    const tClosed = el.dataset.tClosed!;
+    const tOpensIn = el.dataset.tOpensIn!;
+    const tClosesIn = el.dataset.tClosesIn!;
 
-  let faviconLink =
-    (document.querySelector('link[rel="icon"][type="image/svg+xml"]') as HTMLLinkElement) ||
-    (document.querySelector('link[rel="icon"]') as HTMLLinkElement);
-  let lastFaviconStatus: boolean | null = null;
+    function formatDuration(ms: number): { display: string; iso: string } {
+      const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+      const h = Math.floor(totalSeconds / 3600);
+      const m = Math.floor((totalSeconds % 3600) / 60);
+      const s = totalSeconds % 60;
 
-  function updateFavicon(open: boolean) {
-    if (lastFaviconStatus === open) return;
-    lastFaviconStatus = open;
-
-    const canvas = document.createElement("canvas");
-    canvas.width = 32;
-    canvas.height = 32;
-    const ctx = canvas.getContext("2d")!;
-    ctx.beginPath();
-    ctx.arc(16, 16, 14, 0, Math.PI * 2);
-    ctx.fillStyle = open ? "#22c55e" : "#ef4444";
-    ctx.fill();
-
-    if (!faviconLink) {
-      faviconLink = document.createElement("link");
-      faviconLink.rel = "icon";
-      document.head.appendChild(faviconLink);
+      const display = `${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`;
+      const iso = `PT${h}H${m}M${s}S`;
+      return { display, iso };
     }
-    faviconLink.type = "image/png";
-    faviconLink.href = canvas.toDataURL("image/png");
+
+    let faviconLink =
+      (document.querySelector('link[rel="icon"][type="image/svg+xml"]') as HTMLLinkElement) ||
+      (document.querySelector('link[rel="icon"]') as HTMLLinkElement);
+    let lastFaviconStatus: boolean | null = null;
+
+    function updateFavicon(open: boolean) {
+      if (lastFaviconStatus === open) return;
+      lastFaviconStatus = open;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = 32;
+      canvas.height = 32;
+      const ctx = canvas.getContext("2d")!;
+      ctx.beginPath();
+      ctx.arc(16, 16, 14, 0, Math.PI * 2);
+      ctx.fillStyle = open ? "#22c55e" : "#ef4444";
+      ctx.fill();
+
+      if (!faviconLink) {
+        faviconLink = document.createElement("link");
+        faviconLink.rel = "icon";
+        document.head.appendChild(faviconLink);
+      }
+      faviconLink.type = "image/png";
+      faviconLink.href = canvas.toDataURL("image/png");
+    }
+
+    function update() {
+      const now = new Date();
+      const open = isOpen(now);
+      const status = open ? "open" : "closed";
+
+      document.documentElement.setAttribute("data-status", status);
+      statusEl.textContent = open ? tOpen : tClosed;
+
+      const { target } = getTarget(now, open);
+      const remaining = target.getTime() - now.getTime();
+      const { display, iso } = formatDuration(remaining);
+
+      const label = open ? tClosesIn : tOpensIn;
+      countdownLabel.textContent = label;
+      countdownEl.textContent = display;
+      countdownEl.setAttribute("datetime", iso);
+
+      document.title = `${label} ${display} — Tempelhof Feld`;
+      updateFavicon(open);
+    }
+
+    if (intervalId) clearInterval(intervalId);
+    update();
+    intervalId = setInterval(update, 1_000);
   }
 
-  function update() {
-    const now = new Date();
-    const open = isOpen(now);
-    const status = open ? "open" : "closed";
-
-    document.documentElement.setAttribute("data-status", status);
-    statusEl.textContent = open ? tOpen : tClosed;
-
-    const { target } = getTarget(now, open);
-    const remaining = target.getTime() - now.getTime();
-    const { display, iso } = formatDuration(remaining);
-
-    const label = open ? tClosesIn : tOpensIn;
-    countdownLabel.textContent = label;
-    countdownEl.textContent = display;
-    countdownEl.setAttribute("datetime", iso);
-
-    document.title = `${label} ${display} — Tempelhof Feld`;
-    updateFavicon(open);
-  }
-
-  update();
-  setInterval(update, 1_000);
+  document.addEventListener("astro:page-load", init);
 </script>
 
 <style>
