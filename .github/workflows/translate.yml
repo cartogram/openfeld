@@ -1,0 +1,71 @@
+name: Auto-translate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/i18n/en.ts"
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - uses: voidzero-dev/setup-vp@v1
+        with:
+          cache: true
+
+      - name: Translate changed keys
+        id: translate
+        env:
+          DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+        run: |
+          npx tsx scripts/translate.ts | tee /tmp/translate-output.txt
+          if git diff --quiet src/i18n/; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Format translated files
+        if: steps.translate.outputs.changed == 'true'
+        run: vp fmt src/i18n/
+
+      - name: Commit translations
+        if: steps.translate.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/i18n/
+          git commit -m "Auto-translate i18n keys via DeepL"
+          git push
+
+      - name: Build PR comment
+        if: steps.translate.outputs.changed == 'true'
+        id: summary
+        run: |
+          CHANGED_FILES=$(git diff HEAD~1 --name-only | grep '^src/i18n/' | grep -v 'en.ts' || true)
+          FILE_LIST=$(echo "$CHANGED_FILES" | sed 's/^/- `/' | sed 's/$/`/')
+          BODY=$(printf '🌐 Auto-translated i18n keys via DeepL\n\nUpdated files:\n%s' "$FILE_LIST")
+          echo "body<<EOFCOMMENT" >> "$GITHUB_OUTPUT"
+          echo "$BODY" >> "$GITHUB_OUTPUT"
+          echo "EOFCOMMENT" >> "$GITHUB_OUTPUT"
+
+      - name: Comment on PR
+        if: steps.translate.outputs.changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `${{ steps.summary.outputs.body }}`,
+            });
