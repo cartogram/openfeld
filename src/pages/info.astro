@@ -1,6 +1,5 @@
 ---
 import Base from "../layouts/Base.astro";
-import LanguageToggle from "../components/LanguageToggle.astro";
 import { HOURS, MONTH_NAMES } from "../data/hours";
 import { getTranslations } from "../i18n";
 
@@ -9,7 +8,6 @@ const t = getTranslations(locale);
 ---
 
 <Base title={t.infoTitle} lang={locale}>
-  <LanguageToggle />
   <main class="info-page" transition:animate="fade">
     <header class="info-header">
       <h1>Tempelhof Feld</h1>

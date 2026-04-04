@@ -1,13 +1,11 @@
 ---
 import Base from "../../layouts/Base.astro";
-import LanguageToggle from "../../components/LanguageToggle.astro";
 import { getTranslations } from "../../i18n";
 
 const t = getTranslations(Astro.currentLocale);
 ---
 
 <Base title={t.title} lang="de">
-  <LanguageToggle />
   <footer class="info-link">
     <a href="/info">Info</a>
   </footer>

@@ -1,6 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import Interface from "../components/Interface.astro";
+import LanguageToggle from "../components/LanguageToggle.astro";
 import { getTranslations } from "../i18n";
 
 interface Props {
@@ -23,6 +24,7 @@ const t = getTranslations(lang);
     <ClientRouter />
   </head>
   <body>
+    <LanguageToggle />
     <Interface t={t} />
     <slot />
   </body>
