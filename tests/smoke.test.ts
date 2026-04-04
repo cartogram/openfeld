@@ -65,6 +65,41 @@ test.describe("i18n", () => {
     await expect(toggle).toHaveText("English");
     await expect(toggle).toHaveAttribute("href", "/");
   });
+
+  test("switching locale shows translated content", async ({ page }) => {
+    // English home
+    await page.goto("/");
+    const status = page.locator(".status");
+    await expect(status).toHaveText(/^(Open|Closed)$/);
+    await expect(
+      page.getByRole("heading", { name: "Is Tempelhof Feld open?" }),
+    ).toBeVisible();
+
+    // German home — full navigation
+    await page.goto("/de/");
+    await expect(status).toHaveText(/^(Geöffnet|Geschlossen)$/);
+    await expect(
+      page.getByRole("heading", {
+        name: "Ist das Tempelhofer Feld geöffnet?",
+      }),
+    ).toBeVisible();
+  });
+
+  test("language toggle preserves current page", async ({ page }) => {
+    await page.goto("/info");
+
+    // Verify on English info page
+    await expect(
+      page.getByRole("heading", { name: "Tempelhof Feld", exact: true }),
+    ).toBeVisible();
+
+    // Switch to German — should stay on info page
+    await page.locator(".lang-toggle").click();
+    await expect(page).toHaveURL(/\/de\/info/);
+    await expect(
+      page.getByRole("heading", { name: "Tempelhof Feld", exact: true }),
+    ).toBeVisible();
+  });
 });
 
 test.describe("navigation", () => {
