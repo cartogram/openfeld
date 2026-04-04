@@ -1,4 +1,5 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
 import type { Translations } from "../i18n";
 import { HOURS, MONTH_NAMES } from "../data/hours";
 
@@ -8,7 +9,7 @@ interface Props {
 }
 
 const { t, locale } = Astro.props;
-const homeHref = locale === "en" ? "/" : `/${locale}/`;
+const homeHref = getRelativeLocaleUrl(locale, "/");
 ---
 
 <main class="info-page" transition:animate="fade">

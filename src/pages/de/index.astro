@@ -1,4 +1,5 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Base from "../../layouts/Base.astro";
 import { getTranslations } from "../../i18n";
 
@@ -8,7 +9,7 @@ const t = getTranslations(locale);
 
 <Base title={t.title} lang={locale}>
   <footer class="info-link">
-    <a href={`/${locale}/info`}>Info</a>
+    <a href={getRelativeLocaleUrl(locale, "/info")}>Info</a>
   </footer>
 </Base>
 
