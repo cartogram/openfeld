@@ -5,9 +5,39 @@ import { getTranslations } from "../i18n";
 
 const locale = Astro.currentLocale ?? "en";
 const t = getTranslations(locale);
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Openfeld",
+    url: "https://openfeld.com",
+    inLanguage: ["en", "de"],
+    description: "Check if Tempelhof Feld is open right now",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Park",
+    name: "Tempelhofer Feld",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Berlin",
+      addressCountry: "DE",
+    },
+    url: "https://openfeld.com",
+  },
+];
 ---
 
-<Base title={t.title} locale={locale}>
+<Base
+  title={t.title}
+  locale={locale}
+  description={t.descriptionHome}
+  url="/"
+  alternateLocale="de"
+  alternateUrl="/de/"
+  jsonLd={jsonLd}
+>
   <footer class="info-link">
     <a href={getRelativeLocaleUrl(locale, "/info")}>Info</a>
   </footer>

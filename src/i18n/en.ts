@@ -21,4 +21,8 @@ export default {
   officialSite: "official site",
   thf100Desc:
     "the organisation advocating to keep Tempelhof as a public park. They accept donations to support their work.",
+  descriptionHome:
+    "Check if Tempelhof Feld is open right now. Live status and countdown timer for Berlin's beloved park.",
+  descriptionInfo:
+    "Opening hours, history, and useful links for Tempelhof Feld in Berlin.",
 } as const;

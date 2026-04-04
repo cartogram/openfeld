@@ -5,8 +5,47 @@ import { getTranslations } from "../i18n";
 
 const locale = Astro.currentLocale ?? "en";
 const t = getTranslations(locale);
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Openfeld",
+    url: "https://openfeld.com",
+    inLanguage: ["en", "de"],
+    description: "Check if Tempelhof Feld is open right now",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What are the opening hours of Tempelhof Feld?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Tempelhof Feld opening hours vary by month. The park opens between 6:00 and 7:00 depending on the season, and closes between 17:00 and 22:30. Check openfeld.com for the current live status.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What is Tempelhof Feld?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Tempelhof Feld sits on the grounds of the former Tempelhof Airport, one of the world's earliest commercial airports. The airport closed in 2008 and the field reopened as a public urban park in 2010. Today it is one of Berlin's largest and most beloved open spaces \u2014 a place for walking, cycling, skating, gardening, kiting, and simply being outside.",
+        },
+      },
+    ],
+  },
+];
 ---
 
-<Base title={t.infoTitle} locale={locale}>
+<Base
+  title={t.infoTitle}
+  locale={locale}
+  description={t.descriptionInfo}
+  url="/info"
+  jsonLd={jsonLd}
+>
   <InfoPage t={t} locale={locale} />
 </Base>
