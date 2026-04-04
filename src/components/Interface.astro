@@ -3,9 +3,10 @@ import type { Translations } from "../i18n";
 
 interface Props {
   t: Translations;
+  lang: string;
 }
 
-const { t } = Astro.props;
+const { t, lang } = Astro.props;
 ---
 
 <div
@@ -14,7 +15,8 @@ const { t } = Astro.props;
   data-t-closed={t.closed}
   data-t-opens-in={t.opensIn}
   data-t-closes-in={t.closesIn}
-  transition:persist
+  data-lang={lang}
+  transition:name={`interface-${lang}`}
 >
   <h1 class="title">{t.title}</h1>
   <p class="status" role="status" aria-live="polite">{t.loading}</p>

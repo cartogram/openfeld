@@ -66,23 +66,28 @@ test.describe("i18n", () => {
     await expect(toggle).toHaveAttribute("href", "/");
   });
 
-  test("switching locale shows translated content", async ({ page }) => {
-    // English home
+  test("clicking language toggle switches page language", async ({ page }) => {
+    await page.addInitScript(() => localStorage.removeItem("preferred-locale"));
     await page.goto("/");
+
+    // Verify English
     const status = page.locator(".status");
     await expect(status).toHaveText(/^(Open|Closed)$/);
-    await expect(
-      page.getByRole("heading", { name: "Is Tempelhof Feld open?" }),
-    ).toBeVisible();
 
-    // German home — full navigation
-    await page.goto("/de/");
-    await expect(status).toHaveText(/^(Geöffnet|Geschlossen)$/);
+    // Click toggle to switch to German
+    await page.locator(".lang-toggle").click();
+    await page.waitForURL(/\/de\//);
     await expect(
       page.getByRole("heading", {
         name: "Ist das Tempelhofer Feld geöffnet?",
       }),
     ).toBeVisible();
+    await expect(status).toHaveText(/^(Geöffnet|Geschlossen)$/);
+
+    // Click toggle to switch back to English
+    await page.locator(".lang-toggle").click();
+    await page.waitForURL(/^http:\/\/[^/]+\/$/);
+    await expect(status).toHaveText(/^(Open|Closed)$/);
   });
 
   test("language toggle preserves current page", async ({ page }) => {
