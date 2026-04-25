@@ -10,7 +10,8 @@ const { t, locale } = Astro.props;
 ---
 
 <div
-  class="interface"
+  id="interface"
+  class="interface layout-cols"
   data-t-open={t.open}
   data-t-closed={t.closed}
   data-t-opens-in={t.opensIn}
@@ -18,17 +19,31 @@ const { t, locale } = Astro.props;
   data-locale={locale}
   transition:name={`interface-${locale}`}
 >
-  <h1 class="title">{t.title}</h1>
-  <p class="status" role="status" aria-live="polite">{t.loading}</p>
-  <p class="countdown-label"></p>
-  <time class="countdown" datetime=""></time>
+  <div class="layout-gutter" aria-hidden="true"></div>
+  <div class="layout-span-main">
+    <h1 class="">
+      {t.title}
+      <span
+        id="status"
+        class="interface__body display"
+        role="status"
+        aria-live="polite"
+      >
+        {t.loading}
+      </span>
+    </h1>
+
+    <p>
+      <span id="countdown-label"></span>
+      <time id="countdown" datetime=""></time>
+    </p>
+  </div>
 </div>
 
+<div class="layout-gutter" aria-hidden="true"></div>
+
 <script>
-  import {
-    isOpen,
-    getTargetTime as getTarget,
-  } from "../data/hours.js";
+  import { isOpen, getTargetTime as getTarget } from "../data/hours.js";
 
   let intervalId: ReturnType<typeof setInterval> | undefined;
   let lastFaviconStatus: boolean | null = null;
@@ -72,12 +87,12 @@ const { t, locale } = Astro.props;
   function init() {
     // Re-query favicon after head swap
     lastFaviconStatus = null;
-    const el = document.querySelector(".interface") as HTMLElement | null;
+    const el = document.getElementById("interface");
     if (!el) return;
 
-    const statusEl = el.querySelector(".status") as HTMLElement;
-    const countdownLabel = el.querySelector(".countdown-label") as HTMLElement;
-    const countdownEl = el.querySelector(".countdown") as HTMLTimeElement;
+    const statusEl = document.getElementById("status")!;
+    const countdownLabel = document.getElementById("countdown-label")!;
+    const countdownEl = document.getElementById("countdown") as HTMLTimeElement;
 
     const tOpen = el.dataset.tOpen!;
     const tClosed = el.dataset.tClosed!;
@@ -115,40 +130,82 @@ const { t, locale } = Astro.props;
 
 <style>
   .interface {
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    min-height: 0;
+    min-width: 0;
+    height: 100dvh;
+    padding-block: var(--site-header-offset);
+  }
+
+  /*
+
+  .interface__grid {
+    align-items: stretch;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .interface__cell {
+    min-width: 0;
+  }
+
+  .interface__cell--main {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100dvh;
-    padding: 2rem;
-    gap: 1rem;
-  }
-
-  .title {
-    font-size: clamp(1.25rem, 4vw, 2rem);
-    font-weight: 400;
-    color: var(--color-text);
     text-align: center;
+    gap: var(--spacing-2);
   }
 
-  .status {
-    font-size: clamp(3rem, 15vw, 10rem);
-    font-weight: 700;
-    color: var(--color-accent);
-    text-align: center;
-    line-height: 1;
+  .interface__cell--end {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    text-align: right;
+    padding-inline: var(--spacing-1);
   }
 
-  .countdown-label {
-    font-size: clamp(1rem, 3vw, 1.5rem);
-    color: var(--color-text);
-    opacity: 0.8;
+  .interface__body {
+    padding-bottom: 0;
   }
 
-  .countdown {
-    font-size: clamp(1.5rem, 5vw, 3rem);
-    font-weight: 600;
-    color: var(--color-accent);
-    font-variant-numeric: tabular-nums;
+  .interface__footer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--spacing-1);
   }
+
+  .interface__footer p {
+    margin: 0;
+  }
+
+  @media (width <= 700px) {
+    .interface__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .interface__cell--start {
+      display: none;
+    }
+
+    .interface__cell--main {
+      grid-column: 1;
+    }
+
+    .interface__cell--end {
+      grid-column: 1;
+      align-items: center;
+      text-align: center;
+      padding-block-start: var(--spacing-2);
+    }
+
+    .interface__footer {
+      align-items: center;
+    }
+  } */
 </style>

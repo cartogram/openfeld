@@ -1,0 +1,32 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import type { Translations } from "../i18n";
+import LanguageToggle from "./LanguageToggle.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+
+interface Props {
+  t: Translations;
+  locale: string;
+}
+
+const { t, locale } = Astro.props;
+---
+
+<header class="Header">
+  <div class="layout-cols header__outer">
+    <div class="layout-gutter" aria-hidden="true"></div>
+    <div class="layout-span-main">
+      <div class="layout-inner-cols">
+        <a href={getRelativeLocaleUrl(locale, "/info")} class="info-link"
+          >{t.info}</a
+        >
+        <div></div>
+        <nav class="controls">
+          <ThemeToggle />
+          <LanguageToggle />
+        </nav>
+      </div>
+    </div>
+  </div>
+  <div class="layout-gutter" aria-hidden="true"></div>
+</header>

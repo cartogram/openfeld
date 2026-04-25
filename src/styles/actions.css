@@ -1,0 +1,27 @@
+:root {
+  --action-color: var(--main-color);
+  --action-color-underline: var(--main-color-light);
+  --action-font-weight: var(--font-weight-light);
+}
+
+.Action,
+button,
+a {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 1px;
+  background-color: var(--main-background-color);
+  text-decoration-color: var(--action-color-underline);
+  color: var(--action-color);
+  font-weight: var(--action-font-weight);
+
+  &:focus,
+  &:focus-visible,
+  &:active,
+  &:hover {
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+  }
+}
