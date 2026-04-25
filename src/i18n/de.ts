@@ -8,7 +8,7 @@ export default {
   langToggle: "English",
   info: "Infos",
   infoTitle: "Info \u2014 Tempelhofer Feld",
-  close: "Schließen Sie",
+  close: "Schlie\u00dfen",
   openingHours: "Die \u00d6ffnungszeiten",
   monthHeader: "Monat",
   openHeader: "\u00d6ffnen Sie",
