@@ -1,0 +1,162 @@
+@font-face {
+  font-family: "Outward Block";
+  src: url("/assets/fonts/outward-block.woff2") format("woff2");
+  font-weight: light;
+  font-style: light;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Outward Round";
+  src: url("/assets/fonts/outward-round.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Outward Borders";
+  src: url("/assets/fonts/outward-borders.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Chivo";
+  src: url("/assets/fonts/Chivo-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Chivo Mono";
+  src: url("/assets/fonts/ChivoMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-size-display: 20rem;
+  --font-family-display: var(--font-display);
+  --font-family-body: var(--font-body);
+}
+
+html,
+body {
+  font-family: var(--font-body);
+  font-weight: 100;
+}
+
+.Text--large,
+p,
+ol,
+ul,
+h1,
+h2,
+h3,
+h4,
+h5 {
+  padding: 0;
+  margin: 0;
+  font-size: clamp(var(--font-size-sm), 1.8vw, var(--font-size-lg));
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-light);
+  letter-spacing: 0.025em;
+  max-width: 52ch;
+}
+
+h1 {
+  padding-block: var(--spacing-2);
+  font-size: var(--font-size-lg);
+}
+
+.heading--2,
+h2 {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.heading--3,
+h3 {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.display {
+  /* font-size: clamp(3rem, vw, var(--font-size-display)); */
+  /* font-family: var(--font-family-display);
+  font-weight: 400;
+  line-height: 0.8;
+  letter-spacing: 0.025em;
+  color: var(--color-text);
+  text-transform: uppercase; */
+}
+
+ul {
+  display: grid;
+  list-style: none;
+}
+
+ol {
+  padding-left: 1.5rem;
+}
+
+ol li {
+  list-style: decimal;
+  margin-left: 1.5rem;
+}
+
+ul h3 {
+  padding-bottom: 0.5rem;
+}
+
+small {
+  font-size: var(--font-size-xs);
+  font-family: var(--font-mono);
+
+  & > a {
+    display: inline;
+  }
+}
+
+figcaption {
+  padding: 1rem 0;
+
+  & p {
+    font-size: var(--font-size-xs);
+    font-family: var(--font-mono);
+  }
+}
+
+strong {
+  font-weight: var(--font-weight-light);
+  position: relative;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.25rem 0.5rem;
+  text-align: left;
+}
+
+th {
+}
+
+small {
+  font-weight: var(--font-weight-light);
+  font-size: var(--font-size-xs);
+}

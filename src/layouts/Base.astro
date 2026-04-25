@@ -1,7 +1,11 @@
 ---
 import { ClientRouter } from "astro:transitions";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 import Interface from "../components/Interface.astro";
-import LanguageToggle from "../components/LanguageToggle.astro";
+import Head from "../components/Head.astro";
+import Analytics from "../components/Analytics.astro";
+
 import { getTranslations } from "../i18n";
 
 interface Props {
@@ -23,86 +27,60 @@ const {
   alternateLocale,
   alternateUrl,
 } = Astro.props;
+const copyrightYear = new Date().getFullYear();
 const t = getTranslations(locale);
 const siteUrl = "https://openfeld.cartogram.ca";
 const canonicalUrl = new URL(url, siteUrl).href;
 const imageUrl = new URL(image, siteUrl).href;
 const alternateHref = new URL(alternateUrl, siteUrl).href;
+const isDev = import.meta.env.DEV && !import.meta.env.PLAYWRIGHT && false;
 ---
 
-<html lang={locale}>
+<html lang={locale} class:list={[isDev && "layout-debug"]}>
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="description" content={description} />
-    <title>{title}</title>
-    <link rel="canonical" href={canonicalUrl} />
-    <link rel="alternate" hreflang={alternateLocale} href={alternateHref} />
-    <link rel="alternate" hreflang={locale} href={canonicalUrl} />
-    <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
-
-    {/* Open Graph */}
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content={imageUrl} />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content={locale} />
-
-    {/* Twitter Card */}
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={imageUrl} />
+    <Head
+      title={title}
+      description={description}
+      canonicalUrl={canonicalUrl}
+      alternateLocale={alternateLocale}
+      alternateHref={alternateHref}
+      imageUrl={imageUrl}
+      locale={locale}
+    />
     <ClientRouter />
   </head>
   <body>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HDQWCG0LMY"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-HDQWCG0LMY");
-    </script>
-    <LanguageToggle />
-    <Interface t={t} locale={locale} />
-    <slot />
+    <div class="Site">
+      <Analytics />
+      <!-- <Animation /> -->
+      <div class="Shell">
+        <Header t={t} locale={locale} />
+        <main class="Main layout-cols">
+          <div class="layout-span-main">
+            <div class="layout-inner-cols">
+              <div class="layout-inner-span-full Main__slot">
+                <slot />
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer copyrightYear={copyrightYear} />
+      </div>
+      <Interface t={t} locale={locale} />
+    </div>
   </body>
 </html>
 
 <style is:global>
   :root {
-    --color-bg: #2c5f2d;
-    --color-text: #f0f7f0;
-    --color-accent: #ffffff;
+    --color-bg: #fcfcfc;
+    --color-text: #104a10;
+    --color-accent: #048e24;
   }
 
   :root[data-status="closed"] {
     --color-bg: #1a1a2e;
     --color-text: #d0d0d8;
     --color-accent: #e8a0a0;
-  }
-
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  html {
-    background-color: var(--color-bg);
-    color: var(--color-text);
-    font-family:
-      system-ui,
-      -apple-system,
-      sans-serif;
-    transition:
-      background-color 0.5s ease,
-      color 0.5s ease;
   }
 </style>

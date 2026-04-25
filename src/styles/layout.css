@@ -1,0 +1,171 @@
+/* Page shell + shared column system (outer edge | main | edge; inner 3× equal in main). */
+:root {
+  --layout-max: 1750px;
+  --layout-gutter: 1.5rem;
+  --layout-inner-max: var(--layout-max);
+  --layout-inner-gap: 0px;
+  --layout-grid-columns: minmax(var(--layout-gutter), 1fr)
+    minmax(0, var(--layout-max)) minmax(var(--layout-gutter), 1fr);
+}
+
+@media (width > 550px) {
+  :root {
+    --layout-gutter: 2.5rem;
+  }
+}
+
+@media (width > 950px) {
+  :root {
+    --layout-gutter: 4rem;
+  }
+}
+
+@media (width > 1300px) {
+  :root {
+    --layout-gutter: 6rem;
+  }
+}
+
+.layout-gutter {
+  min-width: 0;
+}
+
+.layout-cols {
+  display: grid;
+  width: 100%;
+  grid-template-columns: var(--layout-grid-columns);
+}
+
+.layout-span-main {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.layout-span-full {
+  grid-column: 1 / -1;
+}
+
+.layout-wrap {
+  display: grid;
+  width: 100%;
+  grid-template-columns: var(--layout-grid-columns);
+}
+
+.layout-wrap > * {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.layout-unwrap {
+  margin-left: calc(-1 * var(--layout-gutter));
+  margin-right: calc(-1 * var(--layout-gutter));
+}
+
+.layout-inner-cols {
+  display: grid;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--layout-inner-max);
+  margin-inline: auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--layout-inner-gap);
+  min-width: 0;
+}
+
+.layout-inner-span-full {
+  grid-column: 1 / -1;
+}
+
+.Site {
+  isolation: isolate;
+  background-color: var(--main-background-color);
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.Site::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  max-width: 1920px;
+  margin-inline: auto;
+  background-image: var(--main-background-image);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: var(--main-background-image-filter, invert(1));
+  z-index: -2;
+  pointer-events: none;
+}
+
+.Site::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  max-width: 1920px;
+  margin-inline: auto;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 30%,
+    var(--main-background-color) 70%
+  );
+  z-index: -1;
+  pointer-events: none;
+}
+
+@media (forced-colors: active) {
+  .Site {
+    background: none;
+    background-blend-mode: none;
+  }
+}
+
+.Shell {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
+.Main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.Header {
+  position: relative;
+  z-index: var(--z-index-site-header);
+}
+
+.Footer {
+}
+
+/* Toggle on <html>: dotted outlines for outer and inner column geometry. */
+html.layout-debug {
+  --layout-debug-color: red;
+}
+
+html.layout-debug .layout-cols,
+html.layout-debug .layout-wrap {
+  outline: 1px dotted var(--layout-debug-color);
+  outline-offset: -1px;
+}
+
+html.layout-debug .layout-cols > *,
+html.layout-debug .layout-wrap > * {
+  outline: 1px dotted var(--layout-debug-color);
+  outline-offset: -1px;
+}
+
+html.layout-debug .layout-inner-cols {
+  outline: 1px dotted var(--layout-debug-color);
+  outline-offset: -1px;
+}
+
+html.layout-debug .layout-inner-cols > * {
+  outline: 1px dotted var(--layout-debug-color);
+  outline-offset: -1px;
+}
