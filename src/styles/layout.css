@@ -141,6 +141,8 @@
 }
 
 .Footer {
+  position: relative;
+  z-index: var(--z-index-site-footer);
 }
 
 /* Toggle on <html>: dotted outlines for outer and inner column geometry. */
