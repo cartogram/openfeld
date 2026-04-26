@@ -29,6 +29,8 @@
   --z-index-1: 1;
   --z-index-2: 2;
   --z-index-3: 3;
+  --z-index-site-header: 20;
+  --z-index-site-footer: 20;
 
   /* Radius */
   --radius-1: 0.25rem;
