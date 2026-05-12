@@ -6,7 +6,7 @@ export default {
   closesIn: "Schlie\u00dft in",
   loading: "Laden\u2026",
   hours: "Stunden",
-  minutes: "Minuten",
+  minutes: "Protokoll",
   seconds: "Sekunden",
   langToggle: "EN",
   info: "Über",
