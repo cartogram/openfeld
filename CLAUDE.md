@@ -23,6 +23,7 @@ All commands use the Vite+ CLI (`vp`). Do not use `pnpm`/`npm` directly for runn
 - `vp add / remove / update` — Package management (wraps pnpm)
 
 **Vite+ pitfalls:**
+
 - Never run `vp vitest` or `vp oxlint` directly — use `vp test` and `vp lint`
 - Never import from `vite` or `vitest` directly — use `vite-plus`
 - Never install Vitest, Oxlint, or Oxfmt separately — they are managed by Vite+
@@ -50,8 +51,7 @@ src/
 ├── layouts/            # Base page template
 ├── pages/              # File-based routes
 │   ├── index.astro     # English home page
-│   ├── info.astro      # English info/about page
-│   ├── de/             # German equivalents of above
+│   ├── de/             # German home page
 │   └── api/            # JSON API endpoints
 │       ├── hours.ts    # GET  /api/hours — all 12 months of hours
 │       └── status.ts   # POST /api/status — open/closed at a timestamp
@@ -66,9 +66,9 @@ src/
 
 ### Key Components
 
-- **`Interface.astro`** — Main interactive UI: open/closed status, live countdown (updates every 1 second), dynamic canvas favicon (green = open, red = closed), ARIA live region for accessibility
-- **`Base.astro`** (layout) — Wraps every page; includes `ClientRouter` for Astro view transitions, dynamic theme colors based on park status, SEO meta tags, analytics
-- **`InfoPage.astro`** — Drawer with monthly opening-hours table and park history
+- **`Interface.astro`** — Status UI and countdown; `min-height` fills the viewport below the header (`--site-header-band` in `theme.css`) so `#details` starts below the first screen
+- **`Base.astro`** (layout) — Wraps every page; composes header, interface, content, and footer; includes `ClientRouter` for Astro view transitions, dynamic theme colors based on park status, SEO meta tags, analytics
+- **`Content.astro`** — Page slot plus the details section (opening hours, about copy, links) below the interface
 - **`LanguageToggle.astro`** — Persists locale choice in `localStorage`; redirects on first visit based on browser preference
 - **`ThemeToggle.astro`** — Custom element for light/dark theme toggle
 - **`Head.astro`** — Global `<meta>`, Open Graph, Twitter Card tags
@@ -88,11 +88,13 @@ src/
 ## Testing
 
 After every change:
+
 1. `vp check` — validates formatting, linting, and TypeScript types
 2. `vp exec playwright test` — runs the full E2E suite
 
 **Test files:**
-- `tests/smoke.test.ts` — 10 suites: page load, open/closed display, countdown visibility and updates, German i18n, language toggle, info page navigation, countdown re-init after navigation/reload
+
+- `tests/smoke.test.ts` — Page load, open/closed display, countdown, German i18n, language toggle, `#details` hash / anchor navigation, countdown re-init after navigation/reload
 - `tests/api.test.ts` — GET `/api/hours` response shape, POST `/api/status` with valid/invalid timestamps, CORS headers
 - `scripts/translate.test.ts` — Unit tests for the translation script
 

@@ -9,6 +9,7 @@ interface Props {
 }
 
 const { t, locale } = Astro.props;
+const detailsHref = `${getRelativeLocaleUrl(locale, "/")}#details`;
 ---
 
 <header class="Header">
@@ -16,8 +17,8 @@ const { t, locale } = Astro.props;
     <div class="layout-gutter" aria-hidden="true"></div>
     <div class="layout-span-main">
       <div class="layout-inner-cols header__inner">
-        <div></div>
-        <a href={getRelativeLocaleUrl(locale, "/info")} class="header__link">
+        <div aria-hidden="true"></div>
+        <a href={detailsHref} class="header__link">
           {t.info}
         </a>
         <nav class="header__controls" aria-label="Language">

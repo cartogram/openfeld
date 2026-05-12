@@ -130,8 +130,8 @@
   min-width: 0;
 }
 
-.Main {
-  flex: 1 1 auto;
+.Content {
+  flex: 0 1 auto;
   min-width: 0;
 }
 
@@ -151,18 +151,15 @@
   align-items: center;
 }
 
-.header__link,
-.lang-group {
+.header__link {
   font-family: var(--font-body);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-light);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--main-color);
-}
-
-.header__link {
   text-decoration: none;
+  justify-self: center;
 }
 
 .header__link:hover {
@@ -174,6 +171,12 @@
 }
 
 .lang-group {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--main-color);
   display: inline-flex;
   align-items: baseline;
   gap: 0.5em;

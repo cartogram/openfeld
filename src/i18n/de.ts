@@ -10,8 +10,7 @@ export default {
   seconds: "Sekunden",
   langToggle: "EN",
   info: "Über",
-  infoTitle: "Info \u2014 Tempelhofer Feld",
-  close: "Schlie\u00dfen",
+  toStatus: "Zur Statusanzeige",
   openingHours: "Die \u00d6ffnungszeiten",
   monthHeader: "Monat",
   openHeader: "\u00d6ffnen Sie",
@@ -26,6 +25,4 @@ export default {
     "die Organisation, die sich f\u00fcr den Erhalt von Tempelhof als \u00f6ffentlichen Park einsetzt. Sie nehmen Spenden zur Unterst\u00fctzung ihrer Arbeit an.",
   descriptionHome:
     "Prüfen Sie, ob das Tempelhofer Feld gerade geöffnet ist. Live-Status und Countdown-Timer für Berlins beliebten Park.",
-  descriptionInfo:
-    "Öffnungszeiten, Geschichte und nützliche Links für das Tempelhofer Feld in Berlin.",
 } as const;

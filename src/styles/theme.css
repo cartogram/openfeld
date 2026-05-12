@@ -66,6 +66,11 @@
   );
 
   --site-header-offset: var(--spacing-3);
+  /* Total vertical size of `.Header` (padding + one line of controls). */
+  --site-header-band: calc(
+    var(--site-header-offset) * 2 +
+      (var(--font-size-xs) * var(--line-height-normal))
+  );
   --interface-padding-block: var(--site-header-offset);
 }
 

@@ -8,7 +8,6 @@
 button,
 a {
   font-family: var(--font-body);
-  font-size: var(--font-size-sm);
   text-decoration: underline;
   text-underline-offset: 6px;
   text-decoration-thickness: 1px;

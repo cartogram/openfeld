@@ -3,6 +3,7 @@ import { ClientRouter } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Interface from "../components/Interface.astro";
+import Content from "../components/Content.astro";
 import Head from "../components/Head.astro";
 import Analytics from "../components/Analytics.astro";
 
@@ -33,7 +34,7 @@ const siteUrl = "https://openfeld.cartogram.ca";
 const canonicalUrl = new URL(url, siteUrl).href;
 const imageUrl = new URL(image, siteUrl).href;
 const alternateHref = new URL(alternateUrl, siteUrl).href;
-const isDev = import.meta.env.DEV && !import.meta.env.PLAYWRIGHT && false;
+const isDev = import.meta.env.DEV && !import.meta.env.PLAYWRIGHT;
 ---
 
 <html lang={locale} class:list={[isDev && "layout-debug"]}>
@@ -50,23 +51,17 @@ const isDev = import.meta.env.DEV && !import.meta.env.PLAYWRIGHT && false;
     <ClientRouter />
   </head>
   <body>
-    <div class="Site">
+    <div id="top" class="Site">
       <Analytics />
       <!-- <Animation /> -->
       <div class="Shell">
         <Header t={t} locale={locale} />
-        <main class="Main layout-cols">
-          <div class="layout-span-main">
-            <div class="layout-inner-cols">
-              <div class="layout-inner-span-full Main__slot">
-                <slot />
-              </div>
-            </div>
-          </div>
-        </main>
+        <Interface t={t} locale={locale} />
+        <Content t={t}>
+          <slot />
+        </Content>
         <Footer copyrightYear={copyrightYear} />
       </div>
-      <Interface t={t} locale={locale} />
     </div>
   </body>
 </html>
