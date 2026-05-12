@@ -11,7 +11,6 @@
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   --font-body: "Chivo", var(--font-system);
   --font-display: "Petit Formal Script", var(--font-body);
-  --font-mono: var(--font-body);
   --font-size-xs: 0.7rem;
   --font-size-sm: 0.9rem;
   --font-size-md: 1.35rem;

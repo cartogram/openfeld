@@ -1,38 +1,6 @@
 @font-face {
-  font-family: "Outward Block";
-  src: url("/assets/fonts/outward-block.woff2") format("woff2");
-  font-weight: light;
-  font-style: light;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Outward Round";
-  src: url("/assets/fonts/outward-round.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Outward Borders";
-  src: url("/assets/fonts/outward-borders.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "Chivo";
   src: url("/assets/fonts/Chivo-Variable.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Chivo Mono";
-  src: url("/assets/fonts/ChivoMono-Variable.woff2") format("woff2");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -75,7 +43,7 @@ h1 {
 
 .heading--2,
 h2 {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-light);
   text-transform: uppercase;
@@ -84,7 +52,7 @@ h2 {
 
 .heading--3,
 h3 {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-light);
   text-transform: uppercase;
@@ -121,7 +89,7 @@ ul h3 {
 
 small {
   font-size: var(--font-size-xs);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
 
   & > a {
     display: inline;
@@ -133,7 +101,7 @@ figcaption {
 
   & p {
     font-size: var(--font-size-xs);
-    font-family: var(--font-mono);
+    font-family: var(--font-body);
   }
 }
 

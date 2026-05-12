@@ -51,7 +51,7 @@ hr {
 .footnotes.footnotes.footnotes p,
 .footnotes li,
 .footnotes li::marker {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   max-width: 65ch;
   margin: 0;
   font-size: var(--font-size-xs);
