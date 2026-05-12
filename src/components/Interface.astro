@@ -20,27 +20,33 @@ const { t, locale } = Astro.props;
   transition:name={`interface-${locale}`}
 >
   <div class="layout-gutter" aria-hidden="true"></div>
-  <div class="layout-span-main">
-    <h1 class="">
-      {t.title}
-      <span
-        id="status"
-        class="interface__body display"
-        role="status"
-        aria-live="polite"
-      >
-        {t.loading}
-      </span>
-    </h1>
-
-    <p>
-      <span id="countdown-label"></span>
-      <time id="countdown" datetime=""></time>
-    </p>
+  <div class="layout-span-main interface__main">
+    <div class="layout-inner-cols interface__top">
+      <h1 class="interface__title">{t.title}</h1>
+      <p class="interface__countdown">
+        <span id="countdown-label" class="interface__countdown-label"></span>
+        <time id="countdown" datetime="" class="interface__countdown-time">
+          <span class="interface__countdown-row">
+            <span id="countdown-hours">0</span>
+            <span class="interface__countdown-unit">{t.hours}</span>
+          </span>
+          <span class="interface__countdown-row">
+            <span id="countdown-minutes">0</span>
+            <span class="interface__countdown-unit">{t.minutes}</span>
+          </span>
+          <span class="interface__countdown-row">
+            <span id="countdown-seconds">0</span>
+            <span class="interface__countdown-unit">{t.seconds}</span>
+          </span>
+        </time>
+      </p>
+    </div>
+    <span id="status" class="interface__status display" role="status" aria-live="polite">
+      {t.loading}
+    </span>
   </div>
+  <div class="layout-gutter" aria-hidden="true"></div>
 </div>
-
-<div class="layout-gutter" aria-hidden="true"></div>
 
 <script>
   import { isOpen, getTargetTime as getTarget } from "../data/hours.js";
@@ -48,15 +54,18 @@ const { t, locale } = Astro.props;
   let intervalId: ReturnType<typeof setInterval> | undefined;
   let lastFaviconStatus: boolean | null = null;
 
-  function formatDuration(ms: number): { display: string; iso: string } {
+  function formatDuration(ms: number): {
+    h: number;
+    m: number;
+    s: number;
+    iso: string;
+  } {
     const totalSeconds = Math.max(0, Math.floor(ms / 1000));
     const h = Math.floor(totalSeconds / 3600);
     const m = Math.floor((totalSeconds % 3600) / 60);
     const s = totalSeconds % 60;
-
-    const display = `${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`;
     const iso = `PT${h}H${m}M${s}S`;
-    return { display, iso };
+    return { h, m, s, iso };
   }
 
   function updateFavicon(open: boolean) {
@@ -85,7 +94,6 @@ const { t, locale } = Astro.props;
   }
 
   function init() {
-    // Re-query favicon after head swap
     lastFaviconStatus = null;
     const el = document.getElementById("interface");
     if (!el) return;
@@ -93,6 +101,9 @@ const { t, locale } = Astro.props;
     const statusEl = document.getElementById("status")!;
     const countdownLabel = document.getElementById("countdown-label")!;
     const countdownEl = document.getElementById("countdown") as HTMLTimeElement;
+    const hoursEl = document.getElementById("countdown-hours")!;
+    const minutesEl = document.getElementById("countdown-minutes")!;
+    const secondsEl = document.getElementById("countdown-seconds")!;
 
     const tOpen = el.dataset.tOpen!;
     const tClosed = el.dataset.tClosed!;
@@ -109,13 +120,16 @@ const { t, locale } = Astro.props;
 
       const { target } = getTarget(now, open);
       const remaining = target.getTime() - now.getTime();
-      const { display, iso } = formatDuration(remaining);
+      const { h, m, s, iso } = formatDuration(remaining);
 
       const label = open ? tClosesIn : tOpensIn;
       countdownLabel.textContent = label;
-      countdownEl.textContent = display;
+      hoursEl.textContent = String(h);
+      minutesEl.textContent = String(m).padStart(2, "0");
+      secondsEl.textContent = String(s).padStart(2, "0");
       countdownEl.setAttribute("datetime", iso);
 
+      const display = `${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`;
       document.title = `${label} ${display} — Tempelhof Feld`;
       updateFavicon(open);
     }
@@ -137,75 +151,73 @@ const { t, locale } = Astro.props;
     min-width: 0;
     height: 100dvh;
     padding-block: var(--site-header-offset);
+    pointer-events: none;
   }
 
-  /*
-
-  .interface__grid {
-    align-items: stretch;
+  .interface__main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
     min-height: 0;
-    min-width: 0;
   }
 
-  .interface__cell {
-    min-width: 0;
+  .interface__top {
+    align-items: start;
+    padding-block-start: var(--site-header-offset);
   }
 
-  .interface__cell--main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: var(--spacing-2);
-  }
-
-  .interface__cell--end {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end;
-    text-align: right;
-    padding-inline: var(--spacing-1);
-  }
-
-  .interface__body {
-    padding-bottom: 0;
-  }
-
-  .interface__footer {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: var(--spacing-1);
-  }
-
-  .interface__footer p {
+  .interface__title {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-light);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    line-height: 1.4;
+    width: min-content;
+    padding: 0;
     margin: 0;
+    grid-column: 1;
   }
 
-  @media (width <= 700px) {
-    .interface__grid {
-      grid-template-columns: 1fr;
-    }
+  .interface__countdown {
+    grid-column: 2;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-light);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    line-height: 1.4;
+  }
 
-    .interface__cell--start {
-      display: none;
-    }
+  .interface__countdown-label {
+    display: none;
+  }
 
-    .interface__cell--main {
-      grid-column: 1;
-    }
+  .interface__countdown-time {
+    display: grid;
+    width: min-content;
+    grid-template-columns: max-content max-content;
+    column-gap: 0.5em;
+    row-gap: 0;
+  }
 
-    .interface__cell--end {
-      grid-column: 1;
-      align-items: center;
-      text-align: center;
-      padding-block-start: var(--spacing-2);
-    }
+  .interface__countdown-row {
+    display: contents;
+  }
 
-    .interface__footer {
-      align-items: center;
-    }
-  } */
+  .interface__countdown-unit {
+    white-space: nowrap;
+  }
+
+  .interface__status {
+    grid-column: 1 / -1;
+    font-family: var(--font-display);
+    font-size: clamp(6rem, 22vw, 22rem);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    align-self: end;
+  }
 </style>

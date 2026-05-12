@@ -1,20 +1,40 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
-import { getTranslations } from "../i18n";
 
 const locale = Astro.currentLocale ?? "en";
-const t = getTranslations(locale);
 const otherLocale = locale === "en" ? "de" : "en";
+const currentCode = locale.toUpperCase();
+const otherCode = otherLocale.toUpperCase();
 
-// Get the current page path without the locale prefix
 const pathname = Astro.url.pathname;
 const pathWithoutLocale = pathname.replace(/^\/(de|en)\//, "/");
 const href = getRelativeLocaleUrl(otherLocale, pathWithoutLocale);
+
+// Render in fixed "DE / EN" order regardless of current locale.
+const first = locale === "de" ? "current" : "other";
 ---
 
-<a class="lang-toggle" href={href} data-other-locale={otherLocale}>
-  {t.langToggle}
-</a>
+<span class="lang-group">
+  {
+    first === "current" ? (
+      <>
+        <span class="lang-current" aria-current="true">{currentCode}</span>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <a class="lang-toggle" href={href} data-other-locale={otherLocale}>
+          {otherCode}
+        </a>
+      </>
+    ) : (
+      <>
+        <a class="lang-toggle" href={href} data-other-locale={otherLocale}>
+          {otherCode}
+        </a>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <span class="lang-current" aria-current="true">{currentCode}</span>
+      </>
+    )
+  }
+</span>
 
 <script>
   const toggle = document.querySelector(".lang-toggle") as HTMLAnchorElement;
@@ -29,8 +49,7 @@ const href = getRelativeLocaleUrl(otherLocale, pathWithoutLocale);
   const current = document.documentElement.lang;
   if (preferred && preferred !== current) {
     const path = window.location.pathname.replace(/^\/(de|en)\//, "/");
-    const target =
-      preferred === "en" ? path : `/${preferred}${path}`;
+    const target = preferred === "en" ? path : `/${preferred}${path}`;
     window.location.replace(target);
   }
 </script>
