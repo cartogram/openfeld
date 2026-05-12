@@ -19,8 +19,12 @@ const first = locale === "de" ? "current" : "other";
   {
     first === "current" ? (
       <>
-        <span class="lang-current" aria-current="true">{currentCode}</span>
-        <span class="lang-sep" aria-hidden="true">/</span>
+        <span class="lang-current" aria-current="true">
+          {currentCode}
+        </span>
+        <span class="lang-sep" aria-hidden="true">
+          /
+        </span>
         <a
           class="lang-toggle"
           href={href}
@@ -40,8 +44,12 @@ const first = locale === "de" ? "current" : "other";
         >
           {otherCode}
         </a>
-        <span class="lang-sep" aria-hidden="true">/</span>
-        <span class="lang-current" aria-current="true">{currentCode}</span>
+        <span class="lang-sep" aria-hidden="true">
+          /
+        </span>
+        <span class="lang-current" aria-current="true">
+          {currentCode}
+        </span>
       </>
     )
   }

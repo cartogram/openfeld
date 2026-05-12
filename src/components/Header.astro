@@ -13,19 +13,12 @@ const detailsHref = `${getRelativeLocaleUrl(locale, "/")}#details`;
 ---
 
 <header class="Header">
-  <div class="layout-cols">
-    <div class="layout-gutter" aria-hidden="true"></div>
-    <div class="layout-span-main">
-      <div class="layout-inner-cols header__inner">
-        <div aria-hidden="true"></div>
-        <a href={detailsHref} class="header__link">
-          {t.info}
-        </a>
-        <nav class="header__controls" aria-label="Language">
-          <LanguageToggle />
-        </nav>
-      </div>
-    </div>
-    <div class="layout-gutter" aria-hidden="true"></div>
-  </div>
+  <nav class='Header__link"'>
+    <a href={detailsHref} class="Action">
+      {t.info}
+    </a>
+  </nav>
+  <nav class="Header__controls" aria-label="Language">
+    <LanguageToggle />
+  </nav>
 </header>

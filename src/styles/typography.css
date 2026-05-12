@@ -26,7 +26,14 @@ h1,
 h2,
 h3,
 h4,
-h5 {
+h5,
+table,
+nav,
+.element,
+.heading--1,
+.heading--2,
+.heading--3,
+.heading--4 {
   padding: 0;
   margin: 0;
   font-size: clamp(var(--font-size-sm), 1.8vw, var(--font-size-lg));
@@ -36,9 +43,10 @@ h5 {
   max-width: 52ch;
 }
 
+.heading--1,
 h1 {
-  padding-block: var(--spacing-2);
-  font-size: var(--font-size-lg);
+  /* padding-block: var(--spacing-2);
+  font-size: var(--font-size-lg); */
 }
 
 .heading--2,
@@ -52,21 +60,19 @@ h2 {
 
 .heading--3,
 h3 {
-  font-family: var(--font-body);
+  /* font-family: var(--font-body);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-light);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.05em; */
 }
 
 .display {
-  /* font-size: clamp(3rem, vw, var(--font-size-display)); */
-  /* font-family: var(--font-family-display);
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 22vw, 22rem);
   font-weight: 400;
-  line-height: 0.8;
-  letter-spacing: 0.025em;
-  color: var(--color-text);
-  text-transform: uppercase; */
+  line-height: 0.9;
+  letter-spacing: -0.02em;
 }
 
 ul {
@@ -113,15 +119,13 @@ strong {
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-block: var(--spacing-2);
+  max-width: none;
 }
 
 th,
 td {
-  padding: 0.25rem 0.5rem;
   text-align: left;
-}
-
-th {
 }
 
 small {

@@ -34,7 +34,7 @@ const siteUrl = "https://openfeld.cartogram.ca";
 const canonicalUrl = new URL(url, siteUrl).href;
 const imageUrl = new URL(image, siteUrl).href;
 const alternateHref = new URL(alternateUrl, siteUrl).href;
-const isDev = import.meta.env.DEV && !import.meta.env.PLAYWRIGHT;
+const isDev = import.meta.env.DEV && !import.meta.env.PLAYWRIGHT && false;
 ---
 
 <html lang={locale} class:list={[isDev && "layout-debug"]}>
@@ -53,14 +53,12 @@ const isDev = import.meta.env.DEV && !import.meta.env.PLAYWRIGHT;
   <body>
     <div id="top" class="Site">
       <Analytics />
-      <!-- <Animation /> -->
       <div class="Shell">
         <Header t={t} locale={locale} />
         <Interface t={t} locale={locale} />
         <Content t={t}>
           <slot />
         </Content>
-        <Footer copyrightYear={copyrightYear} />
       </div>
     </div>
   </body>

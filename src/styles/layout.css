@@ -130,16 +130,38 @@
   min-width: 0;
 }
 
+.Interface {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  padding: var(--layout-gutter);
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
 .Content {
   flex: 0 1 auto;
-  min-width: 0;
+  padding: 0 var(--layout-gutter);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  min-height: 100dvh;
 }
 
 .Header {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: var(--z-index-site-header);
-  padding-block: var(--site-header-offset);
+  padding: var(--layout-gutter);
   pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  height: 100dvh;
+  flex-direction: column-reverse;
 }
 
 .Header a,
@@ -147,57 +169,20 @@
   pointer-events: auto;
 }
 
-.header__inner {
-  align-items: center;
-}
-
-.header__link {
-  font-family: var(--font-body);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-light);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--main-color);
-  text-decoration: none;
-  justify-self: center;
-}
-
-.header__link:hover {
-  text-decoration: underline;
-}
-
-.header__controls {
-  justify-self: end;
-}
-
-.lang-group {
-  font-family: var(--font-body);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-light);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--main-color);
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.5em;
-}
-
-.lang-toggle {
-  text-decoration: none;
-  color: inherit;
-}
-
-.lang-toggle:hover {
-  text-decoration: underline;
-}
-
-.lang-current {
-  color: var(--main-color-light);
+.Header__controls {
+  align-self: flex-end;
 }
 
 .Footer {
   position: relative;
   z-index: var(--z-index-site-footer);
+  padding-block: var(--layout-gutter);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  padding-block: var(--spacing-2);
 }
 
 /* Toggle on <html>: dotted outlines for outer and inner column geometry. */
@@ -205,24 +190,15 @@ html.layout-debug {
   --layout-debug-color: red;
 }
 
-html.layout-debug .layout-cols,
-html.layout-debug .layout-wrap {
+html.layout-debug .Header,
+html.layout-debug .Interface,
+html.layout-debug .Content,
+html.layout-debug .Footer {
   outline: 1px dotted var(--layout-debug-color);
   outline-offset: -1px;
-}
 
-html.layout-debug .layout-cols > *,
-html.layout-debug .layout-wrap > * {
-  outline: 1px dotted var(--layout-debug-color);
-  outline-offset: -1px;
-}
-
-html.layout-debug .layout-inner-cols {
-  outline: 1px dotted var(--layout-debug-color);
-  outline-offset: -1px;
-}
-
-html.layout-debug .layout-inner-cols > * {
-  outline: 1px dotted var(--layout-debug-color);
-  outline-offset: -1px;
+  & > * {
+    outline: 1px dotted var(--layout-debug-color);
+    outline-offset: -1px;
+  }
 }

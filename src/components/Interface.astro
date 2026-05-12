@@ -11,7 +11,7 @@ const { t, locale } = Astro.props;
 
 <div
   id="interface"
-  class="interface layout-cols"
+  class="Interface"
   data-t-open={t.open}
   data-t-closed={t.closed}
   data-t-opens-in={t.opensIn}
@@ -19,40 +19,35 @@ const { t, locale } = Astro.props;
   data-locale={locale}
   transition:name={`interface-${locale}`}
 >
-  <div class="layout-gutter" aria-hidden="true"></div>
-  <div class="layout-span-main interface__main">
-    <div class="layout-inner-cols interface__top">
-      <h1 class="interface__title">{t.title}</h1>
-      <p class="interface__countdown">
-        <span id="countdown-label" class="interface__countdown-label"></span>
-        <time id="countdown" datetime="" class="interface__countdown-time">
-          <span class="interface__countdown-row">
-            <span id="countdown-hours">0</span>
-            <span class="interface__countdown-unit">{t.hours}</span>
-          </span>
-          <span class="interface__countdown-row">
-            <span id="countdown-minutes">0</span>
-            <span class="interface__countdown-unit">{t.minutes}</span>
-          </span>
-          <span class="interface__countdown-row">
-            <span id="countdown-seconds">0</span>
-            <span class="interface__countdown-unit">{t.seconds}</span>
-          </span>
-        </time>
-      </p>
-    </div>
-    <div class="interface__middle">
-      <span
-        id="status"
-        class="interface__status display"
-        role="status"
-        aria-live="polite"
-      >
-        {t.loading}
-      </span>
-    </div>
+  <div class="Interface__meta">
+    <h1 class="Interface__title heading--2">{t.title}</h1>
   </div>
-  <div class="layout-gutter" aria-hidden="true"></div>
+  <div
+    id="status"
+    class="Interface__status display"
+    role="status"
+    aria-live="polite"
+  >
+    {t.loading}
+  </div>
+  <div class="Interface__timer stack">
+    <span id="countdown-label" class="Interface__timer-label element heading--2"
+    ></span>
+    <time id="countdown" class="Interface__time stack" datetime="">
+      <span class="element"
+        ><span id="countdown-hours" class="Interface__time-value">0</span>
+        <span class="Interface__time-unit">{t.hours}</span>
+      </span>
+      <span class="element"
+        ><span id="countdown-minutes" class="Interface__time-value">0</span>
+        <span class="Interface__time-unit">{t.minutes}</span>
+      </span>
+      <span class="element"
+        ><span id="countdown-seconds" class="Interface__time-value">0</span>
+        <span class="Interface__time-unit">{t.seconds}</span>
+      </span>
+    </time>
+  </div>
 </div>
 
 <script>
@@ -148,86 +143,3 @@ const { t, locale } = Astro.props;
 
   document.addEventListener("astro:page-load", init);
 </script>
-
-<style>
-  .interface {
-    box-sizing: border-box;
-    min-width: 0;
-    min-height: calc(100dvh - var(--site-header-band));
-    pointer-events: none;
-  }
-
-  .interface__main {
-    display: flex;
-    flex-direction: column;
-    min-height: inherit;
-    min-width: 0;
-  }
-
-  .interface__top {
-    align-items: start;
-    padding-block-start: var(--site-header-offset);
-  }
-
-  .interface__middle {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    min-height: 0;
-  }
-
-  .interface__title {
-    font-family: var(--font-body);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-light);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    line-height: 1.4;
-    width: min-content;
-    padding: 0;
-    margin: 0;
-    grid-column: 1;
-  }
-
-  .interface__countdown {
-    grid-column: 2;
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-light);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    line-height: 1.4;
-  }
-
-  .interface__countdown-label {
-    display: none;
-  }
-
-  .interface__countdown-time {
-    display: grid;
-    width: min-content;
-    grid-template-columns: max-content max-content;
-    column-gap: 0.5em;
-    row-gap: 0;
-  }
-
-  .interface__countdown-row {
-    display: contents;
-  }
-
-  .interface__countdown-unit {
-    white-space: nowrap;
-  }
-
-  .interface__status {
-    grid-column: 1 / -1;
-    font-family: var(--font-display);
-    font-size: clamp(6rem, 22vw, 22rem);
-    font-weight: 400;
-    line-height: 0.9;
-    letter-spacing: -0.02em;
-    align-self: end;
-  }
-</style>

@@ -6,138 +6,77 @@ interface Props {
   t: Translations;
 }
 
+const copyrightYear = new Date().getFullYear();
 const { t } = Astro.props;
 ---
 
-<main class="Content layout-cols">
-  <div class="layout-span-main">
-    <div class="layout-inner-cols">
-      <div class="layout-inner-span-full Content__slot">
-        <slot />
-        <section
-          id="details"
-          class="Content-details"
-          transition:animate="fade"
-        >
-          <div class="Content-details__inner">
-            <header class="Content-details__nav">
-              <a href="#top" class="Content-details__to-status">{t.toStatus}</a>
-            </header>
+<main class="Content">
+  <slot />
+  <nav class="Content__header">
+    <a href="#top" class="Action">{t.toStatus}</a>
+  </nav>
 
-            <section aria-labelledby="details-hours-heading">
-              <h2 id="details-hours-heading">{t.openingHours}</h2>
-              <table>
-                <thead>
-                  <tr>
-                    <th class="heading--3">{t.monthHeader}</th>
-                    <th class="heading--3">{t.openHeader}</th>
-                    <th class="heading--3">{t.closeHeader}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                    Object.entries(HOURS).map(([month, entry]) => (
-                      <tr>
-                        <td>{MONTH_NAMES[Number(month)]}</td>
-                        <td>{entry.open}</td>
-                        <td>
-                          {entry.close}
-                          {entry.splitDay && (
-                            <span class="note heading--3">
-                              ({entry.lateClose && (
-                                <span>{entry.lateClose}</span>
-                              )}
-                              {t.from} {MONTH_NAMES[Number(month)]}{" "}
-                              {entry.splitDay})
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    ))
-                  }
-                </tbody>
-              </table>
-            </section>
+  <h2 class="heading--2">{t.openingHours}</h2>
+  <table>
+    <thead>
+      <tr>
+        <th class="heading--3">{t.monthHeader}</th>
+        <th class="heading--3">{t.openHeader}</th>
+        <th class="heading--3">{t.closeHeader}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        Object.entries(HOURS).map(([month, entry]) => (
+          <tr>
+            <td>{MONTH_NAMES[Number(month)]}</td>
+            <td>{entry.open}</td>
+            <td>
+              {entry.close}
+              {entry.splitDay && (
+                <span class="note heading--3">
+                  ({entry.lateClose && <span>{entry.lateClose}</span>}
+                  {t.from} {MONTH_NAMES[Number(month)]} {entry.splitDay})
+                </span>
+              )}
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
 
-            <section aria-labelledby="details-about-heading">
-              <h2 id="details-about-heading">{t.about}</h2>
-              <p>{t.aboutText}</p>
-            </section>
+  <h2 class="heading--2">{t.about}</h2>
+  <p>{t.aboutText}</p>
 
-            <section aria-labelledby="details-links-heading">
-              <h2 id="details-links-heading" class="sr-only">{t.links}</h2>
-              <ul>
-                <li>
-                  <a
-                    href="https://mattseccafien.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    mattseccafien.com
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.tempelhofer-feld.berlin.de"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    tempelhofer-feld.berlin.de
-                  </a>
-                  — {t.officialSite}
-                </li>
-                <li>
-                  <a
-                    href="https://www.thf100.de"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    100% Tempelhofer Feld
-                  </a>
-                  — {t.thf100Desc}
-                </li>
-              </ul>
-            </section>
-          </div>
-        </section>
-      </div>
-    </div>
-  </div>
+  <h2 class="heading--2 sr-only">{t.links}</h2>
+  <ul>
+    <li>
+      <a
+        href="https://mattseccafien.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        mattseccafien.com
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://www.tempelhofer-feld.berlin.de"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        tempelhofer-feld.berlin.de
+      </a>
+      — {t.officialSite}
+    </li>
+    <li>
+      <a href="https://www.thf100.de" target="_blank" rel="noopener noreferrer">
+        100% Tempelhofer Feld
+      </a>
+      — {t.thf100Desc}
+    </li>
+  </ul>
+  <footer class="Content__footer"></footer>
+  <small>Copyright {copyrightYear} Cartogram</small>
 </main>
-
-<style>
-  .Content-details {
-    box-sizing: border-box;
-    width: 100%;
-    padding-block: var(--spacing-4) var(--spacing-6);
-    background-color: var(--main-background-color);
-    scroll-margin-top: var(--spacing-2);
-  }
-
-  .Content-details__inner {
-    box-sizing: border-box;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-4);
-  }
-
-  .Content-details__nav {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .Content-details__to-status {
-    font-family: var(--font-body);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-light);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--main-color);
-    text-decoration: none;
-  }
-
-  .Content-details__to-status:hover {
-    text-decoration: underline;
-  }
-</style>
