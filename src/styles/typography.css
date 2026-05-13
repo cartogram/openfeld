@@ -1,47 +1,9 @@
 @font-face {
-  font-family: "Outward Block";
-  src: url("/assets/fonts/outward-block.woff2") format("woff2");
-  font-weight: light;
-  font-style: light;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Outward Round";
-  src: url("/assets/fonts/outward-round.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Outward Borders";
-  src: url("/assets/fonts/outward-borders.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "Chivo";
   src: url("/assets/fonts/Chivo-Variable.woff2") format("woff2");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
-}
-
-@font-face {
-  font-family: "Chivo Mono";
-  src: url("/assets/fonts/ChivoMono-Variable.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-:root {
-  --font-size-display: 20rem;
-  --font-family-display: var(--font-display);
-  --font-family-body: var(--font-body);
 }
 
 html,
@@ -58,7 +20,14 @@ h1,
 h2,
 h3,
 h4,
-h5 {
+h5,
+table,
+nav,
+.element,
+.heading--1,
+.heading--2,
+.heading--3,
+.heading--4 {
   padding: 0;
   margin: 0;
   font-size: clamp(var(--font-size-sm), 1.8vw, var(--font-size-lg));
@@ -68,14 +37,15 @@ h5 {
   max-width: 52ch;
 }
 
+.heading--1,
 h1 {
-  padding-block: var(--spacing-2);
-  font-size: var(--font-size-lg);
+  /* padding-block: var(--spacing-2);
+  font-size: var(--font-size-lg); */
 }
 
 .heading--2,
 h2 {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-light);
   text-transform: uppercase;
@@ -84,21 +54,19 @@ h2 {
 
 .heading--3,
 h3 {
-  font-family: var(--font-mono);
+  /* font-family: var(--font-body);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-light);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.05em; */
 }
 
 .display {
-  /* font-size: clamp(3rem, vw, var(--font-size-display)); */
-  /* font-family: var(--font-family-display);
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 22vw, 22rem);
   font-weight: 400;
-  line-height: 0.8;
-  letter-spacing: 0.025em;
-  color: var(--color-text);
-  text-transform: uppercase; */
+  line-height: 0.9;
+  letter-spacing: -0.02em;
 }
 
 ul {
@@ -121,7 +89,7 @@ ul h3 {
 
 small {
   font-size: var(--font-size-xs);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
 
   & > a {
     display: inline;
@@ -133,7 +101,7 @@ figcaption {
 
   & p {
     font-size: var(--font-size-xs);
-    font-family: var(--font-mono);
+    font-family: var(--font-body);
   }
 }
 
@@ -145,15 +113,13 @@ strong {
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-block: var(--spacing-2);
+  max-width: none;
 }
 
 th,
 td {
-  padding: 0.25rem 0.5rem;
   text-align: left;
-}
-
-th {
 }
 
 small {

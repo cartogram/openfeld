@@ -5,10 +5,12 @@ export default {
   opensIn: "Opens in",
   closesIn: "Closes in",
   loading: "Loading\u2026",
-  langToggle: "Deutsch",
-  info: "Info",
-  infoTitle: "Info \u2014 Tempelhof Feld",
-  close: "Close",
+  hours: "Hours",
+  minutes: "Minutes",
+  seconds: "Seconds",
+  langToggle: "DE",
+  info: "About",
+  toStatus: "Back to status",
   openingHours: "Opening Hours",
   monthHeader: "Month",
   openHeader: "Open",
@@ -23,6 +25,4 @@ export default {
     "the organisation advocating to keep Tempelhof as a public park. They accept donations to support their work.",
   descriptionHome:
     "Check if Tempelhof Feld is open right now. Live status and countdown timer for Berlin's beloved park.",
-  descriptionInfo:
-    "Opening hours, history, and useful links for Tempelhof Feld in Berlin.",
 } as const;

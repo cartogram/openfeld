@@ -1,0 +1,82 @@
+---
+import type { Translations } from "../i18n";
+import { HOURS, MONTH_NAMES } from "../data/hours";
+
+interface Props {
+  t: Translations;
+}
+
+const copyrightYear = new Date().getFullYear();
+const { t } = Astro.props;
+---
+
+<main id="details" class="Content">
+  <slot />
+  <nav class="Content__header">
+    <a href="#top" class="Action">{t.toStatus}</a>
+  </nav>
+
+  <h2 class="heading--2">{t.openingHours}</h2>
+  <table>
+    <thead>
+      <tr>
+        <th class="heading--3">{t.monthHeader}</th>
+        <th class="heading--3">{t.openHeader}</th>
+        <th class="heading--3">{t.closeHeader}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        Object.entries(HOURS).map(([month, entry]) => (
+          <tr>
+            <td>{MONTH_NAMES[Number(month)]}</td>
+            <td>{entry.open}</td>
+            <td>
+              {entry.close}
+              {entry.splitDay && (
+                <span class="note heading--3">
+                  ({entry.lateClose && <span>{entry.lateClose}</span>}
+                  {t.from} {MONTH_NAMES[Number(month)]} {entry.splitDay})
+                </span>
+              )}
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+
+  <h2 class="heading--2">{t.about}</h2>
+  <p>{t.aboutText}</p>
+
+  <h2 class="heading--2 sr-only">{t.links}</h2>
+  <ul>
+    <li>
+      <a
+        href="https://mattseccafien.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        mattseccafien.com
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://www.tempelhofer-feld.berlin.de"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        tempelhofer-feld.berlin.de
+      </a>
+      — {t.officialSite}
+    </li>
+    <li>
+      <a href="https://www.thf100.de" target="_blank" rel="noopener noreferrer">
+        100% Tempelhofer Feld
+      </a>
+      — {t.thf100Desc}
+    </li>
+  </ul>
+  <footer class="Content__footer"></footer>
+  <small>Copyright {copyrightYear} Cartogram</small>
+</main>

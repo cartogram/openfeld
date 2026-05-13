@@ -18,7 +18,7 @@ No React, Vue, Svelte, or any JS framework. No Tailwind or any CSS framework —
 
 - All CSS lives in a single `<style>` tag within the Astro component
 - All JavaScript lives inline in a `<script>` tag within the Astro component
-- Use native HTML elements wherever possible (e.g. native popover API for the info drawer)
+- Use native HTML elements wherever possible (e.g. anchor links to the details section below the hero)
 - Use semantic HTML for time and date display (e.g. `<time>` element)
 - Accessibility and WCAG contrast standards must be maintained throughout
 - CSS custom properties (variables) should be used for theming, especially for the open/closed colour schemes

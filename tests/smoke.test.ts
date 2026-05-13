@@ -26,12 +26,12 @@ test.describe("home page", () => {
     await expect(countdownEl).toBeVisible();
 
     const first = await countdownEl.textContent();
-    expect(first).toMatch(/\d+h \d{2}m \d{2}s/);
+    expect(first).toMatch(/\d+\s+Hours\s+\d+\s+Minutes\s+\d+\s+Seconds/i);
 
     // Wait and verify the timer updates
     await page.waitForTimeout(1500);
     const second = await countdownEl.textContent();
-    expect(second).toMatch(/\d+h \d{2}m \d{2}s/);
+    expect(second).toMatch(/\d+\s+Hours\s+\d+\s+Minutes\s+\d+\s+Seconds/i);
     expect(second).not.toBe(first);
   });
 });
@@ -44,9 +44,7 @@ test.describe("i18n", () => {
 
     await expect(page).toHaveTitle(/— Tempelhof Feld$/);
     await expect(
-      page.getByRole("heading", {
-        name: "Ist das Tempelhofer Feld geöffnet?",
-      }),
+      page.getByRole("heading", { name: "Das Feld ist" }),
     ).toBeVisible();
 
     await expect(status(page)).toHaveText(/^(Geöffnet|Geschlossen)$/);
@@ -59,11 +57,11 @@ test.describe("i18n", () => {
 
     const toggle = page.locator(".lang-toggle");
     await expect(toggle).toBeVisible();
-    await expect(toggle).toHaveText("Deutsch");
+    await expect(toggle).toHaveText("DE");
     await expect(toggle).toHaveAttribute("href", "/de/");
 
     await page.goto("/de/");
-    await expect(toggle).toHaveText("English");
+    await expect(toggle).toHaveText("EN");
     await expect(toggle).toHaveAttribute("href", "/");
   });
 
@@ -78,9 +76,7 @@ test.describe("i18n", () => {
     await page.locator(".lang-toggle").click();
     await page.waitForURL(/\/de\//);
     await expect(
-      page.getByRole("heading", {
-        name: "Ist das Tempelhofer Feld geöffnet?",
-      }),
+      page.getByRole("heading", { name: "Das Feld ist" }),
     ).toBeVisible();
     await expect(status(page)).toHaveText(/^(Geöffnet|Geschlossen)$/);
 
@@ -90,17 +86,18 @@ test.describe("i18n", () => {
     await expect(status(page)).toHaveText(/^(Open|Closed)$/);
   });
 
-  test("language toggle preserves current page", async ({ page }) => {
-    await page.goto("/info");
+  test("language toggle preserves hash when switching locale", async ({
+    page,
+  }) => {
+    await page.addInitScript(() => localStorage.removeItem("preferred-locale"));
+    await page.goto("/#details");
 
-    // Verify on English info page
     await expect(
       page.getByRole("heading", { name: "Opening Hours" }),
     ).toBeVisible();
 
-    // Switch to German — should stay on info page
     await page.locator(".lang-toggle").click();
-    await expect(page).toHaveURL(/\/de\/info/);
+    await expect(page).toHaveURL(/\/de\/#details/);
     await expect(
       page.getByRole("heading", { name: "Die Öffnungszeiten" }),
     ).toBeVisible();
@@ -113,7 +110,9 @@ test.describe("navigation", () => {
 
     // Confirm initial load completes (not stuck on "Loading…")
     await expect(status(page)).toHaveText(/^(Open|Closed)$/);
-    await expect(countdown(page)).toHaveText(/\d+h \d{2}m \d{2}s/);
+    await expect(countdown(page)).toHaveText(
+      /\d+\s+Hours\s+\d+\s+Minutes\s+\d+\s+Seconds/i,
+    );
 
     // Navigate to a non-existent page, then go back
     await page.goto("/non-existent");
@@ -122,7 +121,9 @@ test.describe("navigation", () => {
     // Verify countdown re-initializes after navigation
     await expect(status(page)).not.toHaveText("Loading…");
     await expect(status(page)).toHaveText(/^(Open|Closed)$/);
-    await expect(countdown(page)).toHaveText(/\d+h \d{2}m \d{2}s/);
+    await expect(countdown(page)).toHaveText(
+      /\d+\s+Hours\s+\d+\s+Minutes\s+\d+\s+Seconds/i,
+    );
   });
 
   test("countdown loads after page reload", async ({ page }) => {
@@ -130,54 +131,57 @@ test.describe("navigation", () => {
 
     // Confirm initial load
     await expect(status(page)).toHaveText(/^(Open|Closed)$/);
-    await expect(countdown(page)).toHaveText(/\d+h \d{2}m \d{2}s/);
+    await expect(countdown(page)).toHaveText(
+      /\d+\s+Hours\s+\d+\s+Minutes\s+\d+\s+Seconds/i,
+    );
 
     // Reload and verify it re-initializes
     await page.reload();
 
     await expect(status(page)).not.toHaveText("Loading…");
     await expect(status(page)).toHaveText(/^(Open|Closed)$/);
-    await expect(countdown(page)).toHaveText(/\d+h \d{2}m \d{2}s/);
+    await expect(countdown(page)).toHaveText(
+      /\d+\s+Hours\s+\d+\s+Minutes\s+\d+\s+Seconds/i,
+    );
   });
 
-  test("countdown loads after navigating to info and back", async ({
+  test("countdown loads after visiting details anchor and returning", async ({
     page,
   }) => {
     await page.goto("/");
 
-    // Confirm initial load
     await expect(status(page)).toHaveText(/^(Open|Closed)$/);
-    await expect(countdown(page)).toHaveText(/\d+h \d{2}m \d{2}s/);
+    await expect(countdown(page)).toHaveText(
+      /\d+\s+Hours\s+\d+\s+Minutes\s+\d+\s+Seconds/i,
+    );
 
-    // Click the Info link
-    await page.getByRole("link", { name: "Info" }).click();
-    await expect(page.locator(".overlay")).toBeVisible();
+    await page.getByRole("link", { name: "About" }).click();
+    await expect(page.locator("#details")).toBeVisible();
 
-    // Click the Back link
-    await page.locator(".back-link").click();
+    await page.getByRole("link", { name: "Back to status" }).click();
 
-    // Verify countdown re-initializes after returning
     await expect(status(page)).not.toHaveText("Loading…");
     await expect(status(page)).toHaveText(/^(Open|Closed)$/);
-    await expect(countdown(page)).toHaveText(/\d+h \d{2}m \d{2}s/);
+    await expect(countdown(page)).toHaveText(
+      /\d+\s+Hours\s+\d+\s+Minutes\s+\d+\s+Seconds/i,
+    );
   });
 
-  test("countdown loads after starting on info page and navigating home", async ({
+  test("countdown loads after starting on details hash and returning to status", async ({
     page,
   }) => {
-    await page.goto("/info");
+    await page.goto("/#details");
 
-    // Confirm info page loaded
     await expect(
       page.getByRole("heading", { name: "Opening Hours" }),
     ).toBeVisible();
 
-    // Navigate to home via the back link
-    await page.locator(".back-link").click();
+    await page.getByRole("link", { name: "Back to status" }).click();
 
-    // Verify countdown is loaded
     await expect(status(page)).not.toHaveText("Loading…");
     await expect(status(page)).toHaveText(/^(Open|Closed)$/);
-    await expect(countdown(page)).toHaveText(/\d+h \d{2}m \d{2}s/);
+    await expect(countdown(page)).toHaveText(
+      /\d+\s+Hours\s+\d+\s+Minutes\s+\d+\s+Seconds/i,
+    );
   });
 });

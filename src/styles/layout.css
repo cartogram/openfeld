@@ -130,19 +130,53 @@
   min-width: 0;
 }
 
-.Main {
+.Interface {
+  display: flex;
+  flex-direction: column;
   flex: 1 1 auto;
+  min-height: 0;
   min-width: 0;
+  padding: var(--layout-gutter);
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.Content {
+  flex: 0 1 auto;
+  padding: 0 var(--layout-gutter);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  min-height: 100dvh;
 }
 
 .Header {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: var(--z-index-site-header);
+  padding: var(--layout-gutter);
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  height: 100dvh;
+  flex-direction: column-reverse;
 }
 
-.Footer {
-  position: relative;
-  z-index: var(--z-index-site-footer);
+.Header a,
+.Header button {
+  pointer-events: auto;
+}
+
+.Header__controls {
+  align-self: flex-end;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  padding-block: var(--spacing-2);
 }
 
 /* Toggle on <html>: dotted outlines for outer and inner column geometry. */
@@ -150,24 +184,14 @@ html.layout-debug {
   --layout-debug-color: red;
 }
 
-html.layout-debug .layout-cols,
-html.layout-debug .layout-wrap {
+html.layout-debug .Header,
+html.layout-debug .Interface,
+html.layout-debug .Content {
   outline: 1px dotted var(--layout-debug-color);
   outline-offset: -1px;
-}
 
-html.layout-debug .layout-cols > *,
-html.layout-debug .layout-wrap > * {
-  outline: 1px dotted var(--layout-debug-color);
-  outline-offset: -1px;
-}
-
-html.layout-debug .layout-inner-cols {
-  outline: 1px dotted var(--layout-debug-color);
-  outline-offset: -1px;
-}
-
-html.layout-debug .layout-inner-cols > * {
-  outline: 1px dotted var(--layout-debug-color);
-  outline-offset: -1px;
+  & > * {
+    outline: 1px dotted var(--layout-debug-color);
+    outline-offset: -1px;
+  }
 }

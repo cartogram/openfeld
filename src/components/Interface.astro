@@ -11,7 +11,7 @@ const { t, locale } = Astro.props;
 
 <div
   id="interface"
-  class="interface layout-cols"
+  class="Interface"
   data-t-open={t.open}
   data-t-closed={t.closed}
   data-t-opens-in={t.opensIn}
@@ -19,28 +19,36 @@ const { t, locale } = Astro.props;
   data-locale={locale}
   transition:name={`interface-${locale}`}
 >
-  <div class="layout-gutter" aria-hidden="true"></div>
-  <div class="layout-span-main">
-    <h1 class="">
-      {t.title}
-      <span
-        id="status"
-        class="interface__body display"
-        role="status"
-        aria-live="polite"
-      >
-        {t.loading}
+  <div class="Interface__meta">
+    <h1 class="Interface__title heading--2">{t.title}</h1>
+  </div>
+  <div
+    id="status"
+    class="Interface__status display"
+    role="status"
+    aria-live="polite"
+  >
+    {t.loading}
+  </div>
+  <div class="Interface__timer stack">
+    <span id="countdown-label" class="Interface__timer-label element heading--2"
+    ></span>
+    <time id="countdown" class="Interface__time stack" datetime="">
+      <span class="element"
+        ><span id="countdown-hours" class="Interface__time-value">0</span>
+        <span class="Interface__time-unit">{t.hours}</span>
       </span>
-    </h1>
-
-    <p>
-      <span id="countdown-label"></span>
-      <time id="countdown" datetime=""></time>
-    </p>
+      <span class="element"
+        ><span id="countdown-minutes" class="Interface__time-value">0</span>
+        <span class="Interface__time-unit">{t.minutes}</span>
+      </span>
+      <span class="element"
+        ><span id="countdown-seconds" class="Interface__time-value">0</span>
+        <span class="Interface__time-unit">{t.seconds}</span>
+      </span>
+    </time>
   </div>
 </div>
-
-<div class="layout-gutter" aria-hidden="true"></div>
 
 <script>
   import { isOpen, getTargetTime as getTarget } from "../data/hours.js";
@@ -48,15 +56,18 @@ const { t, locale } = Astro.props;
   let intervalId: ReturnType<typeof setInterval> | undefined;
   let lastFaviconStatus: boolean | null = null;
 
-  function formatDuration(ms: number): { display: string; iso: string } {
+  function formatDuration(ms: number): {
+    h: number;
+    m: number;
+    s: number;
+    iso: string;
+  } {
     const totalSeconds = Math.max(0, Math.floor(ms / 1000));
     const h = Math.floor(totalSeconds / 3600);
     const m = Math.floor((totalSeconds % 3600) / 60);
     const s = totalSeconds % 60;
-
-    const display = `${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`;
     const iso = `PT${h}H${m}M${s}S`;
-    return { display, iso };
+    return { h, m, s, iso };
   }
 
   function updateFavicon(open: boolean) {
@@ -85,7 +96,6 @@ const { t, locale } = Astro.props;
   }
 
   function init() {
-    // Re-query favicon after head swap
     lastFaviconStatus = null;
     const el = document.getElementById("interface");
     if (!el) return;
@@ -93,6 +103,9 @@ const { t, locale } = Astro.props;
     const statusEl = document.getElementById("status")!;
     const countdownLabel = document.getElementById("countdown-label")!;
     const countdownEl = document.getElementById("countdown") as HTMLTimeElement;
+    const hoursEl = document.getElementById("countdown-hours")!;
+    const minutesEl = document.getElementById("countdown-minutes")!;
+    const secondsEl = document.getElementById("countdown-seconds")!;
 
     const tOpen = el.dataset.tOpen!;
     const tClosed = el.dataset.tClosed!;
@@ -109,13 +122,16 @@ const { t, locale } = Astro.props;
 
       const { target } = getTarget(now, open);
       const remaining = target.getTime() - now.getTime();
-      const { display, iso } = formatDuration(remaining);
+      const { h, m, s, iso } = formatDuration(remaining);
 
       const label = open ? tClosesIn : tOpensIn;
       countdownLabel.textContent = label;
-      countdownEl.textContent = display;
+      hoursEl.textContent = String(h);
+      minutesEl.textContent = String(m).padStart(2, "0");
+      secondsEl.textContent = String(s).padStart(2, "0");
       countdownEl.setAttribute("datetime", iso);
 
+      const display = `${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`;
       document.title = `${label} ${display} — Tempelhof Feld`;
       updateFavicon(open);
     }
@@ -127,85 +143,3 @@ const { t, locale } = Astro.props;
 
   document.addEventListener("astro:page-load", init);
 </script>
-
-<style>
-  .interface {
-    position: absolute;
-    inset: 0;
-    box-sizing: border-box;
-    min-height: 0;
-    min-width: 0;
-    height: 100dvh;
-    padding-block: var(--site-header-offset);
-  }
-
-  /*
-
-  .interface__grid {
-    align-items: stretch;
-    min-height: 0;
-    min-width: 0;
-  }
-
-  .interface__cell {
-    min-width: 0;
-  }
-
-  .interface__cell--main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: var(--spacing-2);
-  }
-
-  .interface__cell--end {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end;
-    text-align: right;
-    padding-inline: var(--spacing-1);
-  }
-
-  .interface__body {
-    padding-bottom: 0;
-  }
-
-  .interface__footer {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: var(--spacing-1);
-  }
-
-  .interface__footer p {
-    margin: 0;
-  }
-
-  @media (width <= 700px) {
-    .interface__grid {
-      grid-template-columns: 1fr;
-    }
-
-    .interface__cell--start {
-      display: none;
-    }
-
-    .interface__cell--main {
-      grid-column: 1;
-    }
-
-    .interface__cell--end {
-      grid-column: 1;
-      align-items: center;
-      text-align: center;
-      padding-block-start: var(--spacing-2);
-    }
-
-    .interface__footer {
-      align-items: center;
-    }
-  } */
-</style>

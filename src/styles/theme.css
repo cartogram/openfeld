@@ -10,43 +10,21 @@
     system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   --font-body: "Chivo", var(--font-system);
-  --font-display: var(--font-body);
-  --font-mono: var(--font-body);
+  --font-display: "Petit Formal Script", var(--font-body);
   --font-size-xs: 0.7rem;
   --font-size-sm: 0.9rem;
-  --font-size-md: 1.35rem;
-  --font-size-lg: 1.75rem;
-  --font-size-display: 10rem;
+  --font-size-lg: 5rem;
   --font-weight-light: 300;
-  --font-weight-normal: 400;
-  --font-weight-bold: 700;
   --line-height-normal: 1.5;
-  --line-height-tight: 1.3;
-  /* Transitions */
-  --global-transition: 0.2s ease-in-out;
 
   /* Z-index */
-  --z-index-1: 1;
-  --z-index-2: 2;
-  --z-index-3: 3;
   --z-index-site-header: 20;
-  --z-index-site-footer: 20;
 
   /* Radius */
-  --radius-1: 0.25rem;
   --radius-2: 1rem;
 
-  /* Shadows */
-  --shadow-1: 0 0rem 2rem rgba(0, 0, 0, 0.1);
-
   /* Spacing */
-  --spacing-1: 0.5rem;
   --spacing-2: 1rem;
-  --spacing-3: 1.5rem;
-  --spacing-4: 2rem;
-  --spacing-5: 2.5rem;
-  --spacing-6: 3rem;
-  --spacing-7: 3.5rem;
   --background-image-noise: url("/assets/112.webp");
   --main-background-image: var(--background-image-noise);
   --main-background-color: light-dark(var(--color-white), var(--color-black));
@@ -65,14 +43,10 @@
       from var(--color) display-p3 calc(r + 0.4) calc(g + 0.4) calc(b + 0.4)
     )
   );
-
-  --site-header-offset: var(--spacing-3);
-  --interface-padding-block: var(--site-header-offset);
 }
 
 :root.theme-dark {
   --main-background-image-filter: none;
-  --wordmark-opacity: 0.1;
 }
 
 html {

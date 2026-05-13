@@ -8,14 +8,13 @@
 button,
 a {
   font-family: var(--font-body);
-  font-size: var(--font-size-sm);
   text-decoration: underline;
   text-underline-offset: 6px;
   text-decoration-thickness: 1px;
-  background-color: var(--main-background-color);
   text-decoration-color: var(--action-color-underline);
   color: var(--action-color);
   font-weight: var(--action-font-weight);
+  display: inline-flex;
 
   &:focus,
   &:focus-visible,
