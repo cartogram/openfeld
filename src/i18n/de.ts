@@ -10,7 +10,7 @@ export default {
   seconds: "Sekunden",
   langToggle: "EN",
   info: "Über",
-  toStatus: "Zur Statusanzeige",
+  toStatus: "Zurück zum Status",
   openingHours: "Die \u00d6ffnungszeiten",
   monthHeader: "Monat",
   openHeader: "\u00d6ffnen Sie",
