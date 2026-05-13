@@ -66,8 +66,8 @@ src/
 
 ### Key Components
 
-- **`Interface.astro`** — Status UI and countdown; `min-height` fills the viewport below the header (`--site-header-band` in `theme.css`) so `#details` starts below the first screen
-- **`Base.astro`** (layout) — Wraps every page; composes header, interface, content, and footer; includes `ClientRouter` for Astro view transitions, dynamic theme colors based on park status, SEO meta tags, analytics
+- **`Interface.astro`** — Status UI, live countdown, and dynamic favicon; fills the viewport height in layout
+- **`Base.astro`** (layout) — Wraps every page; composes header, interface, and content; includes `ClientRouter` for Astro view transitions, dynamic theme colors based on park status, SEO meta tags, analytics
 - **`Content.astro`** — Page slot plus the details section (opening hours, about copy, links) below the interface
 - **`LanguageToggle.astro`** — Persists locale choice in `localStorage`; redirects on first visit based on browser preference
 - **`ThemeToggle.astro`** — Custom element for light/dark theme toggle

@@ -6,12 +6,6 @@
   font-display: swap;
 }
 
-:root {
-  --font-size-display: 20rem;
-  --font-family-display: var(--font-display);
-  --font-family-body: var(--font-body);
-}
-
 html,
 body {
   font-family: var(--font-body);

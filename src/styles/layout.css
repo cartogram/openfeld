@@ -173,12 +173,6 @@
   align-self: flex-end;
 }
 
-.Footer {
-  position: relative;
-  z-index: var(--z-index-site-footer);
-  padding-block: var(--layout-gutter);
-}
-
 .stack {
   display: flex;
   flex-direction: column;
@@ -192,8 +186,7 @@ html.layout-debug {
 
 html.layout-debug .Header,
 html.layout-debug .Interface,
-html.layout-debug .Content,
-html.layout-debug .Footer {
+html.layout-debug .Content {
   outline: 1px dotted var(--layout-debug-color);
   outline-offset: -1px;
 

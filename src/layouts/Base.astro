@@ -1,7 +1,6 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
 import Interface from "../components/Interface.astro";
 import Content from "../components/Content.astro";
 import Head from "../components/Head.astro";
@@ -28,13 +27,12 @@ const {
   alternateLocale,
   alternateUrl,
 } = Astro.props;
-const copyrightYear = new Date().getFullYear();
 const t = getTranslations(locale);
 const siteUrl = "https://openfeld.cartogram.ca";
 const canonicalUrl = new URL(url, siteUrl).href;
 const imageUrl = new URL(image, siteUrl).href;
 const alternateHref = new URL(alternateUrl, siteUrl).href;
-const isDev = import.meta.env.DEV && !import.meta.env.PLAYWRIGHT && false;
+const isDev = import.meta.env.DEV && !import.meta.env.PLAYWRIGHT;
 ---
 
 <html lang={locale} class:list={[isDev && "layout-debug"]}>
@@ -63,17 +61,3 @@ const isDev = import.meta.env.DEV && !import.meta.env.PLAYWRIGHT && false;
     </div>
   </body>
 </html>
-
-<style is:global>
-  :root {
-    --color-bg: #fcfcfc;
-    --color-text: #104a10;
-    --color-accent: #048e24;
-  }
-
-  :root[data-status="closed"] {
-    --color-bg: #1a1a2e;
-    --color-text: #d0d0d8;
-    --color-accent: #e8a0a0;
-  }
-</style>

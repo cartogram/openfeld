@@ -10,7 +10,7 @@ const copyrightYear = new Date().getFullYear();
 const { t } = Astro.props;
 ---
 
-<main class="Content">
+<main id="details" class="Content">
   <slot />
   <nav class="Content__header">
     <a href="#top" class="Action">{t.toStatus}</a>
